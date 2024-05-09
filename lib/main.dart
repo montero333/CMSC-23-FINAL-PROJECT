@@ -1,31 +1,76 @@
-import 'package:elbi_donation_system/pages/admin_homepage.dart';
+import 'package:elbi_donation_system/pages/DonationsPage.dart';
+import 'package:elbi_donation_system/pages/OrganizationsPage.dart';
+import 'package:elbi_donation_system/providers/donors_provider.dart';
+import 'package:elbi_donation_system/providers/organizations_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+/// Flutter code sample for [NavigationBar].
 
-class MyApp extends StatefulWidget {
+void main() => runApp(
 
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: ((context) => OrganizationsProvider())),
+        ChangeNotifierProvider(create: ((context) => DonorsProvider())),
+      ],
+      child: MyApp(),
+    ),
+
+);
+
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(appBarTheme: AppBarTheme(backgroundColor: Colors.black)),
+      home: const NavigationExample(),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
+class NavigationExample extends StatefulWidget {
+  const NavigationExample({super.key});
+
+  @override
+  State<NavigationExample> createState() => _NavigationExampleState();
+}
+
+class _NavigationExampleState extends State<NavigationExample> {
+  int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    //map of routes
-    Map<String, Widget Function(BuildContext)> routes = {
-        "/home" : (context) => const AdminHomePage(),
-      };
+    final ThemeData theme = Theme.of(context);
+    return Scaffold(
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        indicatorColor: Color.fromARGB(255, 186, 101, 101),
+        selectedIndex: currentPageIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            icon: Icon(Icons.groups),
+            label: 'Organizations',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.volunteer_activism),
+            label: 'Donors',
+          ),
+        ],
+      ),
+      body: <Widget>[
+        /// Home page
+        OrganizationsPage(),
 
-    return MaterialApp(
-      theme: ThemeData(appBarTheme: const AppBarTheme(color: Color.fromARGB(255, 7, 7, 8)),scaffoldBackgroundColor: const Color.fromARGB(255, 18, 18, 19)),
-      initialRoute: "/home",
-      routes: routes,
+        /// Notifications page
+        DonorsPage(),
+      ][currentPageIndex],
     );
   }
 }
