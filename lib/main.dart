@@ -1,31 +1,45 @@
-import 'package:elbi_donation_system/pages/admin_homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:milestone_1/pages/donor_main_page.dart';
+import 'package:milestone_1/pages/organization_main_page.dart';
+import 'package:provider/provider.dart';
+import 'pages/admin_main_page.dart';
+import 'pages/signup_page.dart';
+import 'pages/login_page.dart';
+import 'providers/auth_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //map of routes
-    Map<String, Widget Function(BuildContext)> routes = {
-        "/home" : (context) => const AdminHomePage(),
-      };
-
-    return MaterialApp(
-      theme: ThemeData(appBarTheme: const AppBarTheme(color: Color.fromARGB(255, 7, 7, 8)),scaffoldBackgroundColor: const Color.fromARGB(255, 18, 18, 19)),
-      initialRoute: "/home",
-      routes: routes,
+    return ChangeNotifierProvider(
+      create: (context) => AuthProvider(),
+      child: MaterialApp(
+        title: 'Flutter Auth Example',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: Consumer<AuthProvider>(
+          builder: (context, authProvider, _) {
+            if (authProvider.isLoggedIn) {
+              // Check if user is admin or regular user and navigate accordingly
+              return authProvider.isAdmin ? AdminMainPage() : LoginPage();
+            } else {
+              return LoginPage();
+            }
+          },
+        ),
+        routes: {
+          '/signup': (context) => SignUpPage(),
+          '/login': (context) => LoginPage(),
+          '/adminMainPage': (context) => AdminMainPage(),
+          '/organizationMainPage':(context) => OrganizationMainPage(),
+          '/donorMainPage': (context) => DonorMainPage(),
+        },
+      ),
     );
   }
 }

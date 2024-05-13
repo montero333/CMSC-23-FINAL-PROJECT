@@ -1,4 +1,4 @@
-package com.example.elbi_donation_system
+package com.example.milestone_1
 
 import io.flutter.embedding.android.FlutterActivity
 
