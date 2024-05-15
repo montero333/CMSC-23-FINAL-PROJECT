@@ -6,13 +6,24 @@ import 'pages/admin_main_page.dart';
 import 'pages/signup_page.dart';
 import 'pages/login_page.dart';
 import 'providers/auth_provider.dart';
+import 'providers/donors_provider.dart';
+import 'providers/organizations_provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: ((context) => OrganizationsProvider())),
+        ChangeNotifierProvider(create: ((context) => DonorsProvider())),
+      ],
+      child: MyApp(),
+    ),
+
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // const MyApp(MultiProvider multiProvider, {super.key});
 
   @override
   Widget build(BuildContext context) {
