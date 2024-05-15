@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'admin_list.dart';
 import 'approval_page.dart';
 
 class AdminMainPage extends StatefulWidget {
@@ -11,7 +12,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
   final List<Widget> _pages = [
     // Add your pages here
-    Placeholder(), // Placeholder for the first page
+    AdminListPage(), // Placeholder for the first page
     ApprovalPage(), // Approval page
   ];
 
