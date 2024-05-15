@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'DonationsPage.dart';
+import 'OrganizationsPage.dart';
 import 'admin_list.dart';
 import 'approval_page.dart';
 
@@ -12,8 +14,8 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
   final List<Widget> _pages = [
     // Add your pages here
-    AdminListPage(), // Placeholder for the first page
-    ApprovalPage(), // Approval page
+    OrganizationsPage(), // Placeholder for the first page
+    DonorsPage(), // Approval page
   ];
 
   @override
@@ -42,12 +44,12 @@ class _AdminMainPageState extends State<AdminMainPage> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.groups),
+            label: 'Organizations',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.attach_money),
-            label: 'Organization Approval',
+            icon: Icon(Icons.volunteer_activism),
+            label: 'Donors',
           ),
         ],
       ),

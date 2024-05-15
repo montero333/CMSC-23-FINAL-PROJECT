@@ -21,15 +21,6 @@ class _OrganizationsPageState extends State<OrganizationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // drawer: const DrawerWidget(), //drawer widget
-      appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
-          title: const Text(
-            "Organizations",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
       body: Center(
         child: OrganizationsList(), //passes it to the FriendsList widget below
       ),
@@ -55,7 +46,7 @@ class _OrganizationsListState extends State<OrganizationsList> {
         mainAxisAlignment: MainAxisAlignment.center, //return no friends message
         children: [
           Text(
-            "No friends ",
+            "No Organizations ",
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,

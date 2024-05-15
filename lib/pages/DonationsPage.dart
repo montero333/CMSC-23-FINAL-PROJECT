@@ -20,15 +20,6 @@ class _DonorsPageState extends State<DonorsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // drawer: const DrawerWidget(), //drawer widget
-      appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
-          title: const Text(
-            "Donors",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
       body: Center(
         child: DonorsList(), //passes it to the FriendsList widget below
       ),
