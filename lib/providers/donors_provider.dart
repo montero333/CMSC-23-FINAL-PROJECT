@@ -4,8 +4,8 @@ import '../models/organization_model.dart';
 
 class DonorsProvider with ChangeNotifier {
   final List<Donor> _donorList = [
-    Donor("Aaron", 20000, 'Pending', Organization("JORDAN INC", 20000)),
-    Donor("Jamal", 20000, 'Pending', Organization("LOSBANOS INC", 20000)),
+    Donor("Aaron", 20000, 'Pending', Organization("JORDAN INC", 20000, "Donate to shoeless people")),
+    Donor("Jamal", 20000, 'Pending', Organization("LOSBANOS INC", 20000, "Donate to homeless people")),
   ];
 
   List<Donor> get donorsList => _donorList;

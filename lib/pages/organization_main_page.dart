@@ -36,10 +36,6 @@ class _OrganizationMainPageState extends State<OrganizationMainPage> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Homepage',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.attach_money),
             label: 'Donations',
           ),
@@ -59,12 +55,10 @@ class _OrganizationMainPageState extends State<OrganizationMainPage> {
   Widget _buildBody(int index) {
     switch (index) {
       case 0:
-        return _buildHomepage();
-      case 1:
         return DonationsPage();
-      case 2:
+      case 1:
         return _buildDonationDrivesPage();
-      case 3:
+      case 2:
         return _buildProfilePage();
       default:
         return Container(); // Return an empty container as a default
