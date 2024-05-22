@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'organization_donations_page.dart';
 
 class OrganizationMainPage extends StatefulWidget {
   @override
@@ -60,7 +61,7 @@ class _OrganizationMainPageState extends State<OrganizationMainPage> {
       case 0:
         return _buildHomepage();
       case 1:
-        return _buildDonationsPage();
+        return DonationsPage();
       case 2:
         return _buildDonationDrivesPage();
       case 3:
