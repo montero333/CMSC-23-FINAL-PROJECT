@@ -1,4 +1,4 @@
-package com.example.milestone_1
+package com.example.montero_cmsc23
 
 import io.flutter.embedding.android.FlutterActivity
 
