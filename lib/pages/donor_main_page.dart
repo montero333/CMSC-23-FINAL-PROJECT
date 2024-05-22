@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import '/pages/donation_page_organizations.dart';
 
 class DonorMainPage extends StatefulWidget {
+  const DonorMainPage({super.key});
+
   @override
   _DonorMainPageState createState() => _DonorMainPageState();
 }
@@ -11,9 +14,6 @@ class _DonorMainPageState extends State<DonorMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Donor Main Page'),
-      ),
       body: _buildBody(_currentIndex),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -25,12 +25,8 @@ class _DonorMainPageState extends State<DonorMainPage> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_activity),
-            label: 'Activities',
+            icon: Icon(Icons.volunteer_activism),
+            label: 'Donations',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -46,8 +42,6 @@ class _DonorMainPageState extends State<DonorMainPage> {
       case 0:
         return _buildHome();
       case 1:
-        return _buildActivities();
-      case 2:
         return _buildProfile();
       default:
         return Container();
@@ -55,12 +49,7 @@ class _DonorMainPageState extends State<DonorMainPage> {
   }
 
   Widget _buildHome() {
-    return Center(
-      child: Text(
-        'Home',
-        style: TextStyle(fontSize: 24),
-      ),
-    );
+    return DonationOrganizationsList();
   }
 
   Widget _buildActivities() {
