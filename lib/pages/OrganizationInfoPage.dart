@@ -12,7 +12,7 @@ class OrganizationInfo extends StatelessWidget {
     return  Scaffold(
         appBar: AppBar(
           leading: BackButton(
-            color: Colors.white,
+            color: Colors.black,
             onPressed: () {
               Navigator.pop(context);
             },

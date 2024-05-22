@@ -45,7 +45,7 @@ class _DonorsListState extends State<DonorsList> {
         mainAxisAlignment: MainAxisAlignment.center, //return no friends message
         children: [
           Text(
-            "No friends ",
+            "No donations ",
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
