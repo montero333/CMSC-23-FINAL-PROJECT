@@ -16,6 +16,8 @@ class CredProvider with ChangeNotifier {
   late String address;
   late String contactNumber;
   late String userRole;
+  String? organizationName; // Nullable field for organization name
+  String? proofs; // Nullable field for proofs of legitimacy
 
   String get getUserName => userName;
   String get getFirst => firstName; 
@@ -26,6 +28,8 @@ class CredProvider with ChangeNotifier {
   String get getAddress => address;
   String get getContact => contactNumber;
   String get getUserRole => userRole;
+  String? get getOrganizationName => organizationName; // Nullable getter
+  String? get getProofs => proofs; // Nullable getter
 
   CredProvider() {
     firebaseService = FirebaseCredAPI();
@@ -46,8 +50,15 @@ class CredProvider with ChangeNotifier {
   void addUser(Credential c) async {
     firstName = c.firstName;
     lastName = c.lastName;
+    userName = c.userName;
+    passWord = c.passWord;
+    address = c.address;
+    contactNumber = c.contactNumber;
+    userRole = c.userRole;
+    organizationName = c.organizationName;
+    proofs = c.proofs;
     
-    String message = await firebaseService.addUser(c.toJson(c));
+    String message = await firebaseService.addUser(c.toJson());
     print(message);
     notifyListeners();
   }
