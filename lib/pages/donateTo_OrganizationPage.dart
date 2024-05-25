@@ -22,12 +22,12 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
     "cash": false,
     "necessities": false,
     "others": false,
-    "dropoff_or_pickup": "pickUp",
+    "deliveryMethod": "pickUp",
     "weight": 0,
     "addresses": [],
     "date": null,
   };
-  List<String> pickUp_or_dropOff = ["pickUp", "dropOff"];
+  List<String> deliveryOptions = ["pickUp", "dropOff"];
   File? image;
   final addressController = TextEditingController();
   final weightController = TextEditingController();
@@ -69,7 +69,7 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
     bool isWeightValid = donationFormInput["weight"] > 0;
     bool isAddressEntered = donationFormInput["addresses"].isNotEmpty;
 
-    if ( donationFormInput["dropoff_or_pickup"] != "dropOff" ) {
+    if ( donationFormInput["deliveryMethod"] != "dropOff" ) {
       return isCheckboxChecked && isDateSelected && isWeightValid && isAddressEntered;
     } else {
       return isCheckboxChecked && isDateSelected && isWeightValid;
@@ -78,7 +78,7 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
 
   void submitForm() {
     if (isFormValid()) {
-      if (donationFormInput["dropoff_or_pickup"] == "dropOff") {
+      if (donationFormInput["deliveryMethod"] == "dropOff") {
         donationFormInput["addresses"] = []; //reset address
       }
       showDialog(
@@ -234,11 +234,11 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
             Text("Pick up or Drop Off?", style: TextStyle(color: Colors.black)),
             RadioListTile<String>(
               title: const Text('Pick Up'),
-              value: pickUp_or_dropOff[0],
-              groupValue: donationFormInput["dropoff_or_pickup"],
+              value: deliveryOptions[0],
+              groupValue: donationFormInput["deliveryMethod"],
               onChanged: (String? value) {
                 setState(() {
-                  donationFormInput["dropoff_or_pickup"] = value;
+                  donationFormInput["deliveryMethod"] = value;
                 });
               },
               activeColor: Colors.green, // Set the color when selected
@@ -246,11 +246,11 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
             ),
             RadioListTile<String>(
               title: const Text('Drop Off'),
-              value: pickUp_or_dropOff[1],
-              groupValue: donationFormInput["dropoff_or_pickup"],
+              value: deliveryOptions[1],
+              groupValue: donationFormInput["deliveryMethod"],
               onChanged: (String? value) {
                 setState(() {
-                  donationFormInput["dropoff_or_pickup"] = value;
+                  donationFormInput["deliveryMethod"] = value;
                 });
               },
               activeColor: Colors.green, // Set the color when selected
@@ -289,7 +289,7 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
             ),
 
             Visibility(
-              visible: donationFormInput["dropoff_or_pickup"] != "dropOff",
+              visible: donationFormInput["deliveryMethod"] != "dropOff",
               child: Column(
                 children: [
                   Text(
