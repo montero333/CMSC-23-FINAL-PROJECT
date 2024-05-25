@@ -28,13 +28,13 @@ class _DatePickerState extends State<DatePicker> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(selectedDate == null
-                ? 'Select a date'
-                : 'Selected date: ${selectedDate!.toIso8601String()}'),
             TextButton(
               onPressed: () => _selectDate(context),
               child: Text('Select Date'),
             ),
+            Text(selectedDate == null
+                ? 'Select a date'
+                : 'Selected date: ${selectedDate!.toIso8601String()}'),
           ],
         ),
       );

@@ -18,7 +18,7 @@ class _DonateToOrganizationState extends State<DonateToOrganization> {
     "cash": false, 
     "necessities": false, 
     "others": false,
-    "dropoff_or_pickup":"",
+    "dropoff_or_pickup":"pickUp",
     "weight":0
     };
   List<String> pickUp_or_dropOff = ["pickUp","dropOff"];
@@ -36,6 +36,7 @@ class _DonateToOrganizationState extends State<DonateToOrganization> {
       // Optionally, display an error message to the user
     }
   }
+  
 
 
   @override
@@ -125,6 +126,19 @@ class _DonateToOrganizationState extends State<DonateToOrganization> {
                 keyboardType: TextInputType.number,
                 onChanged: (String weightValue) => updateWeight(weightValue), // Only numbers can be entered
               ),
+            Visibility(
+              visible: donationFormInput["dropoff_or_pickup"] != "dropOff",
+              child: Column(
+                children: [
+                  Text("Address",style: TextStyle(color: Colors.black),),
+                  TextField(
+                      decoration: InputDecoration(labelText: "Enter address"),
+                      keyboardType: TextInputType.number,
+                      onChanged: (String weightValue) => updateWeight(weightValue), // Only numbers can be entered
+                    ),
+                ],
+              ),
+            ),
             DatePicker(),
             ElevatedButton(onPressed: () => {
               print(donationFormInput)
