@@ -8,8 +8,16 @@ import 'pages/login_page.dart';
 import 'providers/auth_provider.dart';
 import 'providers/donors_provider.dart';
 import 'providers/organizations_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+
   runApp(
     MultiProvider(
       providers: [
@@ -18,7 +26,6 @@ void main() {
       ],
       child: MyApp(),
     ),
-
   );
 }
 

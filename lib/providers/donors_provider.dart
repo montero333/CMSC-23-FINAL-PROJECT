@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/donor_model.dart';
-import '../models/organization_model.dart';
 
 class DonorsProvider with ChangeNotifier {
   final List<Donor> _donorList = [];

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:milestone_1/pages/donateTo_OrganizationPage.dart';
 import 'package:milestone_1/pages/donation_drive_list.dart';
 import 'package:provider/provider.dart';
-
 import '../models/organization_model.dart';
 import '../providers/organizations_provider.dart';
-import 'OrganizationInfoPage.dart';
 
 class DonationOrganizationsList extends StatefulWidget {
   const DonationOrganizationsList({super.key});
