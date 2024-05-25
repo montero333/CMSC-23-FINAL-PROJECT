@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Import the intl package
 
 class DatePicker extends StatefulWidget {
   @override
@@ -24,19 +25,21 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate = selectedDate != null
+        ? "Selected date: ${DateFormat('MMMM d, yyyy').format(selectedDate!)}"
+        : 'Select a date';
+
     return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextButton(
-              onPressed: () => _selectDate(context),
-              child: Text('Select Date'),
-            ),
-            Text(selectedDate == null
-                ? 'Select a date'
-                : 'Selected date: ${selectedDate!.toIso8601String()}'),
-          ],
-        ),
-      );
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(formattedDate),
+          TextButton(
+            onPressed: () => _selectDate(context),
+            child: Text('Select Date'),
+          ),
+        ],
+      ),
+    );
   }
 }

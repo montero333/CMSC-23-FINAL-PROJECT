@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:milestone_1/pages/donateTo_OrganizationPage.dart';
+import 'package:milestone_1/pages/donation_drive_list.dart';
 import 'package:provider/provider.dart';
 
 import '../models/organization_model.dart';
@@ -18,25 +19,21 @@ class _DonationOrganizationsListState extends State<DonationOrganizationsList> {
   @override
   Widget build(BuildContext context) {
     final List<Organization> organizations = context.watch<OrganizationsProvider>().organizationsList;
-    final List<OrganizationCardData> data = [
-      OrganizationCardData(title: organizations[0].name, description: organizations[0].description),
-      OrganizationCardData(title: organizations[1].name, description: organizations[1].description),
-      // ... add more data objects
-    ];
+
     return Scaffold(
       appBar: AppBar(
         title: Text("List of Organizations"),
+        backgroundColor: Colors.green,
       ),
       body: ListView.builder(
-        itemCount: data.length,
+        itemCount: organizations.length,
         itemBuilder: (context, index) {
           Organization organization = organizations[index];
-          final cardData = data[index];
           return GestureDetector(
             onTap: () => {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => DonateToOrganization(organization: organization),))
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DonationDriveList(donationDrives: organization.organizationDrives),))
             },
-            child: OrganizationCard(data: cardData)
+            child: OrganizationCard(organization: organization)
             ); // Pass data to your card widget
         },
       ),
@@ -52,9 +49,9 @@ class OrganizationCardData {
 }
 
 class OrganizationCard extends StatelessWidget {
-  final OrganizationCardData data;
+  final Organization organization;
 
-  const OrganizationCard({super.key, required this.data});
+  const OrganizationCard({super.key, required this.organization});
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +61,11 @@ class OrganizationCard extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              data.title,
+              organization.name,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8.0),
-            Text(data.description),
+            Text(organization.description),
           ],
         ),
       ),

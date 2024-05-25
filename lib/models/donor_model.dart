@@ -1,10 +1,10 @@
-import 'package:milestone_1/models/organization_model.dart';
+import 'package:milestone_1/models/donation_drive_model.dart';
 
 class Donor {
   String name;
   double donation;
   String status;
-  Organization org;
+  DonationDrive drive;
 
-  Donor(this.name, this.donation, this.status, this.org);
+  Donor(this.name, this.donation, this.status, this.drive);
 }
