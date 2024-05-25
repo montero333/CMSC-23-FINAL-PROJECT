@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/donation_drive_model.dart';
 import 'package:intl/intl.dart'; // Import the intl package
+import '../models/donation_model.dart'; 
 
 
 class DonateToOrganizationDrive extends StatefulWidget {
@@ -26,6 +27,7 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
     "weight": 0,
     "addresses": [],
     "date": null,
+    "time": null,
   };
   List<String> deliveryOptions = ["pickUp", "dropOff"];
   File? image;
@@ -66,13 +68,14 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
         donationFormInput["necessities"] ||
         donationFormInput["others"];
     bool isDateSelected = donationFormInput["date"] != null;
+    bool isTimeSelected = donationFormInput["time"] != null;
     bool isWeightValid = donationFormInput["weight"] > 0;
     bool isAddressEntered = donationFormInput["addresses"].isNotEmpty;
 
     if ( donationFormInput["deliveryMethod"] != "dropOff" ) {
-      return isCheckboxChecked && isDateSelected && isWeightValid && isAddressEntered;
+      return isCheckboxChecked && isDateSelected && isTimeSelected && isWeightValid && isAddressEntered;
     } else {
-      return isCheckboxChecked && isDateSelected && isWeightValid;
+      return isCheckboxChecked && isDateSelected && isTimeSelected && isWeightValid;
     }
   }
 
@@ -103,7 +106,22 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                     content: Text('Successful donation!'), // Display a success message
                   ),
                 );
+                Donation donation = Donation(
+                  drive: widget.donationDrive, 
+                  food: donationFormInput["food"],
+                  clothes: donationFormInput["clothes"],
+                  cash: donationFormInput["cash"],
+                  necessities: donationFormInput["necessities"],
+                  others: donationFormInput["others"],
+                  deliveryMethod: donationFormInput["deliveryMethod"],
+                  weight: donationFormInput["weight"],
+                  addresses: donationFormInput["addresses"],
+                  date: DateFormat('yyyy-MM-dd').format(donationFormInput["date"]),
+                  time: donationFormInput["time"]?.format(context) ?? ""
+                  );
                 print(donationFormInput);
+                donation.printDetails();
+                
               },
               child: Text("Yes"),
             ),
@@ -138,6 +156,12 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
   void updateDate(DateTime date) {
     setState(() {
       donationFormInput["date"] = date;
+    });
+  }
+
+  void updateTime(TimeOfDay time) {
+    setState(() {
+      donationFormInput["time"] = time;
     });
   }
 
@@ -339,6 +363,7 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
             ),
 
             DatePicker(onDateSelected: updateDate),
+            TimePicker(onTimeSelected: updateTime),
             Text(
               "Photo of items (optional)",
               style: TextStyle(
@@ -480,3 +505,50 @@ class _DatePickerState extends State<DatePicker> {
     );
   }
 }
+
+class TimePicker extends StatefulWidget {
+  final Function(TimeOfDay) onTimeSelected;
+
+  TimePicker({required this.onTimeSelected});
+
+  @override
+  _TimePickerState createState() => _TimePickerState();
+}
+
+class _TimePickerState extends State<TimePicker> {
+  TimeOfDay? selectedTime;
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null && picked != selectedTime) {
+      setState(() {
+        selectedTime = picked;
+        widget.onTimeSelected(selectedTime!);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String formattedTime = selectedTime != null
+        ? "Selected time: ${selectedTime!.format(context)}"
+        : 'Select a time';
+
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(formattedTime),
+          TextButton(
+            onPressed: () => _selectTime(context),
+            child: Text('Select Time'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
