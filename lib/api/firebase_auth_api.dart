@@ -1,11 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthAPI {
   static final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   late String currentId;
 
+  FirebaseAuthAPI() {
+    if (auth.currentUser != null) {
+      currentId = auth.currentUser!.uid;
+    } else {
+      currentId = '';
+    }
+  }
+
   Stream<User?> getUser() {
-    if (auth.currentUser != null) { currentId = auth.currentUser!.uid; }
     return auth.authStateChanges();
   }
 
@@ -14,8 +23,10 @@ class FirebaseAuthAPI {
   Future<void> signIn(String email, String password) async {
     UserCredential credential;
     try {
-      final credential = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      credential = await auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       print(credential);
       currentId = credential.user!.uid;
     } on FirebaseAuthException catch (e) {
@@ -29,7 +40,14 @@ class FirebaseAuthAPI {
     }
   }
 
-  Future<String> signUp(String email, String password) async {
+  Future<String> signUp(
+    String email, 
+    String firstName,
+    String lastName,
+    String password,
+    String address,
+    String contactNumber,
+    String userRole) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -52,5 +70,7 @@ class FirebaseAuthAPI {
 
   Future<void> signOut() async {
     await auth.signOut();
+    currentId = '';
   }
+
 }

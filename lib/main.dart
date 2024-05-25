@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:montero_cmsc23/pages/donor_main_page.dart';
+import 'package:montero_cmsc23/pages/signup_page.dart';
 import 'package:provider/provider.dart';
 import '../providers/credential_provider.dart';
 import '../providers/auth_provider.dart';
@@ -37,7 +39,8 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/login': (context) => const LoginPage(),
-        '/todo': (context) => const LoginPage(),
+        '/signup': (context) => const SignupPage(),
+        '/donor':(context) => const DonorMainPage()
       },
     );
   }

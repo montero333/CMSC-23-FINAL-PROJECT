@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:montero_cmsc23/providers/credential_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../pages/signup_page.dart';
@@ -55,7 +56,25 @@ class _LoginPageState extends State<LoginPage> {
             // Validation passed, proceed with login
             String email = emailController.text.trim();
             String password = passwordController.text.trim();
-            await context.read<MyAuthProvider>().signIn(email, password);
+            bool success = await context.read<MyAuthProvider>().signIn(email, password);
+            if (success) {
+              // Retrieve user role
+              String? role = await context.read<CredProvider>().getUserRoleByEmail(email);
+              if (role != null) {
+                print("User role: $role");
+                // Navigate based on user role
+                if (role == 'Donor') {
+                  Navigator.pushNamed(context, '/donor');
+                } else {
+                  // Handle other roles or provide a default behavior
+                  print("User has a different role.");
+                }
+              } else {
+                print("Failed to retrieve user role.");
+              }
+            } else {
+              print("Login failed.");
+            }
           }
         },
         child: const Text('Log In', style: TextStyle(color: Colors.blue)),

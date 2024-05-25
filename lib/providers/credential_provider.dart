@@ -7,7 +7,7 @@ class CredProvider with ChangeNotifier {
   late FirebaseCredAPI firebaseService;
   late Stream<QuerySnapshot> _userStream;
 
-  late String userName;
+  late String email;
   late String firstName;
   late String lastName;
   late String _currentId;
@@ -16,10 +16,10 @@ class CredProvider with ChangeNotifier {
   late String address;
   late String contactNumber;
   late String userRole;
-  String? organizationName; // Nullable field for organization name
-  String? proofs; // Nullable field for proofs of legitimacy
+  String? organizationName;
+  String? proofs;
 
-  String get getUserName => userName;
+  String get getEmail => email;
   String get getFirst => firstName; 
   String get getLast => lastName; 
   String get currentID => _currentId;
@@ -28,8 +28,8 @@ class CredProvider with ChangeNotifier {
   String get getAddress => address;
   String get getContact => contactNumber;
   String get getUserRole => userRole;
-  String? get getOrganizationName => organizationName; // Nullable getter
-  String? get getProofs => proofs; // Nullable getter
+  String? get getOrganizationName => organizationName;
+  String? get getProofs => proofs;
 
   CredProvider() {
     firebaseService = FirebaseCredAPI();
@@ -48,9 +48,11 @@ class CredProvider with ChangeNotifier {
   }
 
   void addUser(Credential c) async {
+
+
+    email = c.email;
     firstName = c.firstName;
     lastName = c.lastName;
-    userName = c.userName;
     passWord = c.passWord;
     address = c.address;
     contactNumber = c.contactNumber;
@@ -62,5 +64,19 @@ class CredProvider with ChangeNotifier {
     print(message);
     notifyListeners();
   }
+
+   Future<String?> getUserRoleByEmail(String email) async {
+    try {
+      DocumentSnapshot userDoc = await firebaseService.getUserByEmail(email);
+      userRole = userDoc['userRole'];
+      notifyListeners();
+      return userRole;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  
 
 }

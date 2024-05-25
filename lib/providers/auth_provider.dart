@@ -5,6 +5,8 @@ import '../api/firebase_auth_api.dart';
 class MyAuthProvider with ChangeNotifier {
   late FirebaseAuthAPI authService;
   late Stream<User?> uStream;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   User? userObj;
 
   MyAuthProvider() {
@@ -23,15 +25,34 @@ class MyAuthProvider with ChangeNotifier {
     return authService.current;
   }
 
-  Future<String> signUp(String email, String password) async {
-    String id = await authService.signUp(email, password);
+  Future<String> signUp(
+    String email, 
+    String firstName,
+    String lastName,
+    String password,
+    String address,
+    String contactNumber,
+    String userRole) async {
+    String id = await authService.signUp(
+      email, 
+      firstName, 
+      lastName, 
+      password, 
+      address, 
+      contactNumber, 
+      userRole); //await authService.signUp(email, password);
     notifyListeners();
     return id;
   }
 
-  Future<void> signIn(String email, String password) async {
-    await authService.signIn(email, password);
-    notifyListeners();
+   Future<bool> signIn(String email, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return true;
+    } catch (e) {
+      print('Sign-in failed: $e');
+      return false;
+    }
   }
 
   Future<void> signOut() async {

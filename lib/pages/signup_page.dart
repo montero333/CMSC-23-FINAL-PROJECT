@@ -1,11 +1,12 @@
 import 'dart:io'; // Import dart:io for File class
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart'; // Import image_picker package
 import '../providers/credential_provider.dart';
 import '../models/credential_model.dart';
 import '../providers/auth_provider.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage; // firebase storage
 
 
 class SignupPage extends StatefulWidget {
@@ -57,6 +58,18 @@ class _SignupPageState extends State<SignupPage> {
     setState(() {
       selectedImages.removeAt(index);
     });
+  }
+
+   Future<void> _showToast(String message) async {
+    await Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 
   @override
@@ -150,14 +163,21 @@ class _SignupPageState extends State<SignupPage> {
               return;
             }
 
-            final uid = await context.read<MyAuthProvider>().signUp(
-              emailController.text,
-              passwordController.text,
-            );
+          final uid = await context.read<MyAuthProvider>().signUp(
+          emailController.text,
+          firstNameController.text,
+          lastNameController.text,
+          passwordController.text,
+          addressController.text,
+          contactNumberController.text,
+          _isOrganization ? 'Organization' : 'Donor',
+        );
+
 
             context.read<CredProvider>().addUser(
               Credential(
-                userName: emailController.text,
+                userId: uid,
+                email: emailController.text,
                 firstName: firstNameController.text,
                 lastName: lastNameController.text,
                 passWord: passwordController.text,
@@ -168,7 +188,7 @@ class _SignupPageState extends State<SignupPage> {
                 proofs: _isOrganization ? proofsController.text : null,
               ),
             );
-
+            
             if (context.mounted) {
               Navigator.pop(context);
             }
