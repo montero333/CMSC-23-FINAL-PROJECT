@@ -78,7 +78,41 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
 
   void submitForm() {
     if (isFormValid()) {
-      print(donationFormInput);
+      if (donationFormInput["dropoff_or_pickup"] == "dropOff") {
+        donationFormInput["addresses"] = []; //reset address
+      }
+      showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Donation"),
+          content: Text("Are you sure you want to donate?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("No"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Close the dialog after submitting the form
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Successful donation!'), // Display a success message
+                  ),
+                );
+                print(donationFormInput);
+              },
+              child: Text("Yes"),
+            ),
+          ],
+        );
+      },
+    );
+      
+      
       // Perform form submission logic here
     } else {
       showDialog(
@@ -132,7 +166,13 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Text("Donation Type", style: TextStyle(color: Colors.black)),
+            Text("Donation Type", 
+              style: TextStyle(
+                  color: Colors.black, // Set text color
+                  fontSize: 16, // Set font size
+                  fontWeight: FontWeight.bold, // Set font weight
+                )
+              ),
             CheckboxListTile(
               title: const Text('Food'),
               value: donationFormInput["food"],
@@ -142,6 +182,8 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                   donationFormInput["food"] = value!;
                 });
               },
+              activeColor: Colors.green, // Set the color when checked
+              checkColor: Colors.white, // Set the color of the checkmark
             ),
             CheckboxListTile(
               title: const Text('Clothes'),
@@ -152,6 +194,8 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                   donationFormInput["clothes"] = value!;
                 });
               },
+              activeColor: Colors.green, // Set the color when checked
+              checkColor: Colors.white, // Set the color of the checkmark
             ),
             CheckboxListTile(
               title: const Text('Cash'),
@@ -162,6 +206,8 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                   donationFormInput["cash"] = value!;
                 });
               },
+              activeColor: Colors.green, // Set the color when checked
+              checkColor: Colors.white, // Set the color of the checkmark
             ),
             CheckboxListTile(
               title: const Text('Necessities'),
@@ -172,6 +218,8 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                   donationFormInput["necessities"] = value!;
                 });
               },
+              activeColor: Colors.green, // Set the color when checked
+              checkColor: Colors.white, // Set the color of the checkmark
             ),
             CheckboxListTile(
               title: const Text('Others'),
@@ -193,6 +241,8 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                   donationFormInput["dropoff_or_pickup"] = value;
                 });
               },
+              activeColor: Colors.green, // Set the color when selected
+              selectedTileColor: Colors.grey[200], // Set the color of the selected tile
             ),
             RadioListTile<String>(
               title: const Text('Drop Off'),
@@ -203,22 +253,69 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                   donationFormInput["dropoff_or_pickup"] = value;
                 });
               },
+              activeColor: Colors.green, // Set the color when selected
+              selectedTileColor: Colors.grey[200], // Set the color of the selected tile
             ),
-            Text("Weight of items to donate", style: TextStyle(color: Colors.black)),
+            Text(
+              "Weight of items to donate",
+              style: TextStyle(
+                color: Colors.black, // Set text color
+                fontSize: 16, // Set font size
+                fontWeight: FontWeight.bold, // Set font weight
+              ),
+            ),
+
             TextField(
               controller: weightController,
-              decoration: InputDecoration(labelText: "Enter weight"),
+              decoration: InputDecoration(
+                labelText: "Enter weight",
+                labelStyle: TextStyle(
+                  color: Colors.black, // Change the color of the label text
+                ),
+                border: OutlineInputBorder( // Set border style
+                  borderSide: BorderSide(color: Colors.grey), // Set the border color
+                  borderRadius: BorderRadius.circular(10.0), // Set border radius
+                ),
+                focusedBorder: OutlineInputBorder( // Set focused border style
+                  borderSide: BorderSide(color: Colors.blue), // Set the focused border color
+                  borderRadius: BorderRadius.circular(10.0), // Set focused border radius
+                ),
+              ),
               keyboardType: TextInputType.number,
               onChanged: (String weightValue) => updateWeight(weightValue),
+              style: TextStyle(
+                color: Colors.black, // Change the color of the input text
+              ),
             ),
+
             Visibility(
               visible: donationFormInput["dropoff_or_pickup"] != "dropOff",
               child: Column(
                 children: [
-                  Text("Address", style: TextStyle(color: Colors.black)),
+                  Text(
+                    "Address",
+                    style: TextStyle(
+                      color: Colors.black, // Set text color
+                      fontSize: 16, // Set font size
+                      fontWeight: FontWeight.bold, // Set font weight
+                    ),
+                  ),
                   TextField(
                     controller: addressController,
-                    decoration: InputDecoration(labelText: "Enter address"),
+                    decoration: InputDecoration(
+                      labelText: "Enter address",
+                      labelStyle: TextStyle(
+                          color: Colors.black, // Change the color of the label text
+                        ),
+                        border: OutlineInputBorder( // Set border style
+                          borderSide: BorderSide(color: Colors.grey), // Set the border color
+                          borderRadius: BorderRadius.circular(10.0), // Set border radius
+                        ),
+                        focusedBorder: OutlineInputBorder( // Set focused border style
+                          borderSide: BorderSide(color: Colors.blue), // Set the focused border color
+                          borderRadius: BorderRadius.circular(10.0), // Set focused border radius
+                        ),
+                      ),
                   ),
                   ElevatedButton(
                     onPressed: addAddress,
@@ -240,8 +337,16 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                 ],
               ),
             ),
+
             DatePicker(onDateSelected: updateDate),
-            Text("Photos of items (optional)"),
+            Text(
+              "Photo of items (optional)",
+              style: TextStyle(
+                      color: Colors.black, // Set text color
+                      fontSize: 16, // Set font size
+                      fontWeight: FontWeight.bold, // Set font weight
+                    )
+                ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -294,12 +399,32 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                   setState(() {
                     image = null;
                   })
-                }, child: Text("Remove Image"))
+                }, 
+                child: Text("Remove Image"),
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white, 
+                    backgroundColor: Colors.red, // Text color
+                    textStyle: TextStyle(fontSize: 16), // Text style
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Button padding
+                    shape: RoundedRectangleBorder( // Button border shape
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                )
               ],
             ),
             ElevatedButton(
               onPressed: submitForm,
               child: Text("Done"),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, 
+                backgroundColor: Colors.green, // Text color
+                textStyle: TextStyle(fontSize: 16), // Text style
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Button padding
+                shape: RoundedRectangleBorder( // Button border shape
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
           ],
         ),
