@@ -31,7 +31,7 @@ class _DonationDriveListState extends State<DonationDriveList> {
           DonationDrive donationDrive = widget.donationDrives[index];
           return GestureDetector(
             onTap: () => {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => DonateToOrganizationDrive(donationDrive: donationDrive),))
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DonateToOrganizationDrive(donationDrive: donationDrive, userID: "user1",),))
             },
             child: DonationDriveCard(donationDrive: donationDrive)
             ); // Pass data to your card widget

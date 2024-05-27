@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:milestone_1/models/image_constants.dart';
+import 'package:milestone_1/providers/donation_provider.dart';
+import 'package:provider/provider.dart';
 import '../models/donation_drive_model.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 import '../models/donation_model.dart'; 
@@ -10,7 +13,8 @@ import '../models/donation_model.dart';
 
 class DonateToOrganizationDrive extends StatefulWidget {
   final DonationDrive donationDrive;
-  const DonateToOrganizationDrive({super.key, required this.donationDrive});
+  String? userID;
+  DonateToOrganizationDrive({super.key, this.userID, required this.donationDrive});
 
   @override
   State<DonateToOrganizationDrive> createState() => _DonateToOrganizationDriveState();
@@ -107,7 +111,8 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                   ),
                 );
                 Donation donation = Donation(
-                  drive: widget.donationDrive, 
+                  driveID: widget.donationDrive.id, 
+                  userID: widget.userID,
                   food: donationFormInput["food"],
                   clothes: donationFormInput["clothes"],
                   cash: donationFormInput["cash"],
@@ -117,10 +122,13 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                   weight: donationFormInput["weight"],
                   addresses: donationFormInput["addresses"],
                   date: DateFormat('yyyy-MM-dd').format(donationFormInput["date"]),
-                  time: donationFormInput["time"]?.format(context) ?? ""
+                  time: donationFormInput["time"]?.format(context) ?? "",
+                  image: ImageConstants().convertToBase64(image)
                   );
                 print(donationFormInput);
                 donation.printDetails();
+                context.read<DonationProvider>().addDonation(donation);
+                
                 
               },
               child: Text("Yes"),

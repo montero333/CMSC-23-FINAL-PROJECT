@@ -6,10 +6,10 @@ import '../models/organization_model.dart';
 class OrganizationsProvider with ChangeNotifier {
   final List<Organization> _organizationList = [
     Organization("JORDAN INC", 20000, [
-      DonationDrive("SHOE4EVERYONE", 0, "Donate to TAYTAY PEOPLE")
+      DonationDrive("1","SHOE4EVERYONE", 0, "Donate to TAYTAY PEOPLE","1")
     ],"Donate to shoeless people"),
     Organization("LOSBANOS INC", 20000, [
-      DonationDrive("Piso Mula Sa Puso", 0, "Tulungan ang mga tao makaahon")
+      DonationDrive("2","Piso Mula Sa Puso", 0, "Tulungan ang mga tao makaahon","2")
     ], "Donate to the Los Banos People")
   ];
   

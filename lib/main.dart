@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:milestone_1/pages/donor_main_page.dart';
 import 'package:milestone_1/pages/organization_main_page.dart';
+import 'package:milestone_1/providers/donation_provider.dart';
 import 'package:provider/provider.dart';
 import 'pages/admin_main_page.dart';
 import 'pages/signup_page.dart';
@@ -23,6 +24,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: ((context) => OrganizationsProvider())),
         ChangeNotifierProvider(create: ((context) => DonorsProvider())),
+        ChangeNotifierProvider(create: ((context) => DonationProvider())),
       ],
       child: MyApp(),
     ),

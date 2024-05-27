@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:milestone_1/pages/donor_profile_page.dart';
 import '/pages/donation_page_organizations.dart';
 
 class DonorMainPage extends StatefulWidget {
@@ -52,22 +53,8 @@ class _DonorMainPageState extends State<DonorMainPage> {
     return DonationOrganizationsList();
   }
 
-  Widget _buildActivities() {
-    return Center(
-      child: Text(
-        'Activities',
-        style: TextStyle(fontSize: 24),
-      ),
-    );
-  }
-
   Widget _buildProfile() {
-    return Center(
-      child: Text(
-        'Profile',
-        style: TextStyle(fontSize: 24),
-      ),
-    );
+    return DonorProfilePage();
   }
 }
 
