@@ -136,8 +136,16 @@ class _DonorProfilePageState extends State<DonorProfilePage> {
                       Donation donation = Donation.fromJson(snapshot.data?.docs[index].data() as Map<String, dynamic>);
                       return Card(
                         child: ListTile(
-                          title: Text("Type: ${donation.getDonationTypes(donation)}"),
-                          subtitle: Text('Date: ${donation.date}'),
+                          title: Text("WIP"),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Type: ${donation.getDonationTypes(donation)}"),
+                              Text("Date: ${donation.date}"),
+                              Text("Time: ${donation.time}"),
+                              Text("Delivery Method: ${donation.deliveryMethod == "dropOff" ? "Drop Off" : "Pick Up"}")
+                            ],
+                          ),
                           trailing: Text(donation.status),
                         ),
                       );
