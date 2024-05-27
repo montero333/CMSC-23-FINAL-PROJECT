@@ -125,7 +125,7 @@ class _DonorProfilePageState extends State<DonorProfilePage> {
                     );
                   } else if (!snapshot.hasData) {
                     return const Center(
-                      child: Text("No Todos Found"),
+                      child: Text("No Donations Found"),
                     );
                   }
 
