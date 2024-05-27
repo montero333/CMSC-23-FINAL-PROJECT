@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:milestone_1/pages/donateTo_OrganizationPage.dart';
+import '../pages/donateTo_OrganizationPage.dart';
 import 'package:provider/provider.dart';
 
 import '../models/donation_drive_model.dart';

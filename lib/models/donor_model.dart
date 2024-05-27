@@ -1,4 +1,4 @@
-import 'package:milestone_1/models/donation_drive_model.dart';
+import '../models/donation_drive_model.dart';
 
 class Donor {
   String name;

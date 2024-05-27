@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:montero_cmsc23/api/firebase_credential_api.dart';
-import 'package:montero_cmsc23/pages/login.dart';
+import 'package:montero_cmsc23/pages/login_page.dart';
 import 'package:provider/provider.dart';
 import '../providers/credential_provider.dart';
 import '../models/credential_model.dart';

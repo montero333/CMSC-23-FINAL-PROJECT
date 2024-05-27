@@ -1,7 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:milestone_1/models/donation_drive_model.dart';
-
 class Donation {
   String? id;
   String? driveID; //para saang donation drive yung donation

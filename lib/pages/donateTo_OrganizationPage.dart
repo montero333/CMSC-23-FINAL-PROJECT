@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:milestone_1/models/image_constants.dart';
-import 'package:milestone_1/providers/donation_provider.dart';
+import '../models/image_constants.dart';
+import '../providers/donation_provider.dart';
 import 'package:provider/provider.dart';
 import '../models/donation_drive_model.dart';
 import 'package:intl/intl.dart'; // Import the intl package
@@ -13,7 +13,7 @@ import '../models/donation_model.dart';
 
 class DonateToOrganizationDrive extends StatefulWidget {
   final DonationDrive donationDrive;
-  String? userID;
+  final String? userID;
   DonateToOrganizationDrive({super.key, this.userID, required this.donationDrive});
 
   @override

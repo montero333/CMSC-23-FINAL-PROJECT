@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:milestone_1/pages/donor_profile_page.dart';
+import '../pages/donor_profile_page.dart';
 import '/pages/donation_page_organizations.dart';
 
 class DonorMainPage extends StatefulWidget {
