@@ -21,10 +21,10 @@ class Credential {
     required this.passWord,
     required this.address,
     required this.contactNumber,
-    required this.userRole, // No default value
-    this.organizationName, // Nullable field
-    this.proofs, // Nullable field
-    this.isApproved = false, // Default value for approval status
+    required this.userRole, 
+    this.organizationName, 
+    this.proofs, 
+    this.isApproved = false, 
   });
 
   factory Credential.fromJson(Map<String, dynamic> json) {
@@ -39,7 +39,7 @@ class Credential {
       userRole: json['userRole'] ?? 'Donor',
       organizationName: json['organizationName'], 
       proofs: json['proofs'], 
-      isApproved: json['isApproved'] ?? (json['userRole'] == 'Donor'), // Default value based on userRole
+      isApproved: json['isApproved'] ?? (json['userRole'] == 'Donor'),
     );
   }
 

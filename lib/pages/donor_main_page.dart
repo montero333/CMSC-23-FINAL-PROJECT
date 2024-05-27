@@ -7,29 +7,29 @@ class DonorMainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Donor Main Page'),
+        title: const Text('Donor Dashboard'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome, Donor!',
+          children: <Widget>[
+            const Text(
+              'Welcome to the Donor Dashboard!',
               style: TextStyle(fontSize: 24),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Implement any action for the donor main page
+                // Define the action for this button
               },
-              child: Text('Perform Donor Action'),
+              child: const Text('Make a Donation'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context); // Go back to the previous page
+                // Define the action for this button
               },
-              child: Text('Logout'),
+              child: const Text('View Donation History'),
             ),
           ],
         ),

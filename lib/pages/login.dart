@@ -65,10 +65,16 @@ class _LoginPageState extends State<LoginPage> {
                 // Navigate based on user role
                 if (role == 'Donor') {
                   Navigator.pushNamed(context, '/donor');
-                } else {
-                  // Handle other roles or provide a default behavior
-                  print("User has a different role.");
+                } 
+                
+                else if (role == 'Organization') {
+                  Navigator.pushNamed(context, '/organization');
                 }
+
+                else if (role == 'Admin') {
+                  Navigator.pushNamed(context, '/admin');
+                }
+    
               } else {
                 print("Failed to retrieve user role.");
               }

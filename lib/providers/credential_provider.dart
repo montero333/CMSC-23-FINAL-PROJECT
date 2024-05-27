@@ -61,6 +61,8 @@ class CredProvider with ChangeNotifier {
     proofs = c.proofs;
     
     String message = await firebaseService.addUser(c.toJson());
+    
+    
     print(message);
     notifyListeners();
   }

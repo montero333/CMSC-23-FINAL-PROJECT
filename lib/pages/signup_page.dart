@@ -1,13 +1,11 @@
-import 'dart:io'; // Import dart:io for File class
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:montero_cmsc23/api/firebase_credential_api.dart';
+import 'package:montero_cmsc23/pages/login.dart';
 import 'package:provider/provider.dart';
-import 'package:image_picker/image_picker.dart'; // Import image_picker package
 import '../providers/credential_provider.dart';
 import '../models/credential_model.dart';
 import '../providers/auth_provider.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage; // firebase storage
-
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -19,68 +17,35 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   bool _isOrganization = false;
+
   final organizationNameController = TextEditingController();
   final proofsController = TextEditingController();
   List<String> selectedImages = []; // List to store selected image paths
 
-  Future<void> _uploadProof() async {
-  final ImagePicker _picker = ImagePicker();
-  final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-  if (image != null) {
-    try {
-      // Upload the selected image to Firebase Storage
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('proofs')
-          .child('proof_${DateTime.now().millisecondsSinceEpoch}.jpg');
+  final FirebaseCredAPI _firebaseCredAPI = FirebaseCredAPI(); // Initialize FirebaseCredAPI
 
-      await ref.putFile(File(image.path));
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final addressController = TextEditingController();
+  final contactNumberController = TextEditingController();
 
-      // Once uploaded, you can get the download URL of the image
-      String downloadURL = await ref.getDownloadURL();
-
-      // Update the proofsController text field with the download URL
-      setState(() {
-        proofsController.text = downloadURL;
-        selectedImages.add(image.path); // Add selected image path to the list
-      });
-    } catch (e) {
-      print('Error uploading proof image to Firebase Storage: $e');
-    }
-  } else {
-    // User canceled the operation
-    print('No image selected.');
-  }
-}
-
-
-  void _removeImage(int index) {
-    setState(() {
-      selectedImages.removeAt(index);
-    });
-  }
-
-   Future<void> _showToast(String message) async {
-    await Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    addressController.dispose();
+    contactNumberController.dispose();
+    organizationNameController.dispose();
+    proofsController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final firstNameController = TextEditingController();
-    final lastNameController = TextEditingController();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final addressController = TextEditingController();
-    final contactNumberController = TextEditingController();
-
     final firstNameField = TextFormField(
       controller: firstNameController,
       enabled: !_isOrganization, // Disable if sign up as organization
@@ -163,16 +128,33 @@ class _SignupPageState extends State<SignupPage> {
               return;
             }
 
-          final uid = await context.read<MyAuthProvider>().signUp(
-          emailController.text,
-          firstNameController.text,
-          lastNameController.text,
-          passwordController.text,
-          addressController.text,
-          contactNumberController.text,
-          _isOrganization ? 'Organization' : 'Donor',
-        );
+            bool emailExists = await _firebaseCredAPI.checkIfEmailExistsInDatabase(emailController.text);
+            if (emailExists) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Email already exists')),
+              );
+              return;
+            }
 
+            if (_isOrganization) {
+              bool orgNameExists  = await _firebaseCredAPI.checkIfOrganizationNameExists(organizationNameController.text);
+              if (orgNameExists ) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Organization name already exists')),
+                );
+                return;
+              }
+            }
+
+            final uid = await context.read<MyAuthProvider>().signUp(
+              emailController.text,
+              firstNameController.text,
+              lastNameController.text,
+              passwordController.text,
+              addressController.text,
+              contactNumberController.text,
+              _isOrganization ? 'Organization' : 'Donor',
+            );
 
             context.read<CredProvider>().addUser(
               Credential(
@@ -188,65 +170,43 @@ class _SignupPageState extends State<SignupPage> {
                 proofs: _isOrganization ? proofsController.text : null,
               ),
             );
-            
-            if (context.mounted) {
-              Navigator.pop(context);
-            }
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
           }
         },
-        child: const Text('Sign up', style: TextStyle(color: Colors.blue)),
+        child: const Text('Sign Up'),
       ),
     );
 
-    final backButton = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: ElevatedButton(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('Back', style: TextStyle(color: Colors.blue)),
-      ),
+    final backButton = TextButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: const Text('Back to login'),
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
+      appBar: AppBar(
+        title: const Text('Sign Up'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.symmetric(horizontal: 40.0),
-          children: <Widget>[
-            const Text(
-              "Sign Up",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 25),
-            ),
+          children: [
             Form(
               key: _formKey,
               child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Flexible(child: firstNameField),
-                      const SizedBox(width: 20.0),
-                      Flexible(child: lastNameField),
-                    ],
-                  ),
+                children: <Widget>[
+                  firstNameField,
+                  lastNameField,
                   emailField,
                   passwordField,
                   addressField,
                   contactNumberField,
-                  Row(
-                    children: [
-                      Radio(
-                        value: false,
-                        groupValue: _isOrganization,
-                        onChanged: (value) {
-                          setState(() {
-                            _isOrganization = value!;
-                          });
-                        },
-                      ),
-                      const Text('Sign up as Donor'),
-                    ],
-                  ),
+                  const SizedBox(height: 20),
                   Row(
                     children: [
                       Radio(
@@ -284,22 +244,26 @@ class _SignupPageState extends State<SignupPage> {
                               Expanded(
                                 child: TextButton.icon(
                                   onPressed: () async {
-                                    await _uploadProof(); // Call the function to upload proof
+                                    await _firebaseCredAPI.uploadProof(
+                                      proofsController: proofsController,
+                                      selectedImages: selectedImages,
+                                      setStateCallback: setState,
+                                    );
                                   },
-                                  icon: Icon(Icons.camera_alt),
-                                  label: Text('Upload Proof/s'),
+                                  icon: const Icon(Icons.camera_alt),
+                                  label: const Text('Upload Proof/s'),
                                 ),
                               ),
                             ],
                           ),
                           // Display selected images
                           if (selectedImages.isNotEmpty) ...[
-                            SizedBox(height: 10),
-                            Text(
+                            const SizedBox(height: 10),
+                            const Text(
                               'Selected Images:',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             Container(
                               height: 100,
                               child: ListView.builder(
@@ -309,7 +273,7 @@ class _SignupPageState extends State<SignupPage> {
                                   return Stack(
                                     children: [
                                       Container(
-                                        margin: EdgeInsets.only(right: 10),
+                                        margin: const EdgeInsets.only(right: 10),
                                         width: 100,
                                         height: 100,
                                         decoration: BoxDecoration(
@@ -327,10 +291,13 @@ class _SignupPageState extends State<SignupPage> {
                                         child: Row(
                                           children: [
                                             IconButton(
-                                              icon: Icon(Icons.delete),
+                                              icon: const Icon(Icons.delete),
                                               onPressed: () {
-                                                // Remove the image from the list
-                                                _removeImage(index);
+                                                _firebaseCredAPI.removeImage(
+                                                  index: index,
+                                                  selectedImages: selectedImages,
+                                                  setStateCallback: setState,
+                                                );
                                                 // Also remove the image file from the device
                                                 File(selectedImages[index]).deleteSync();
                                               },
