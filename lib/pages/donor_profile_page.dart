@@ -1,6 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:montero_cmsc23/pages/drawer.dart';
+import 'package:montero_cmsc23/providers/credential_provider.dart';
+import 'package:montero_cmsc23/providers/donation_provider.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
+import '../models/donation_model.dart';
+import '../providers/auth_provider.dart';
 import 'edit_profile_page.dart';
 
 class DonorProfilePage extends StatefulWidget {
@@ -24,23 +31,28 @@ class _DonorProfilePageState extends State<DonorProfilePage> {
     },
   ];
 
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  // Future<void> _pickImage() async {
+  //   final picker = ImagePicker();
+  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image = File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
   
   
 
   @override
   Widget build(BuildContext context) {
+    String? userID = context.watch<MyAuthProvider>().userID;
+    context.watch<DonationProvider>().fetchDonationsByUserID(userID);
+    Stream<QuerySnapshot> donationStream = context.watch<DonationProvider>().donationStream;
+
     return Scaffold(
+      drawer: AppDrawer(),
       appBar: AppBar(
         title: Text('Donor Profile'),
         backgroundColor: Colors.green,
@@ -73,7 +85,21 @@ class _DonorProfilePageState extends State<DonorProfilePage> {
                       : null,
                 ),
                 SizedBox(width: 15,),
-                Text("Fname Lname")
+                FutureBuilder<Map<String, dynamic>?>(
+                  future: context.read<CredProvider>().getUserByID(userID),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else if (!snapshot.hasData || snapshot.data == null) {
+                      return Text("User not found");
+                    } else {
+                      Map<String, dynamic>? userData = snapshot.data;
+                      return Text("${userData!['firstName']} ${userData['lastName']}");
+                    }
+                  },
+                ),
               ],
             ),
             SizedBox(height: 16),
@@ -86,18 +112,38 @@ class _DonorProfilePageState extends State<DonorProfilePage> {
             ),
             SizedBox(height: 16),
             Expanded(
-              child: ListView.builder(
-                itemCount: _donations.length,
-                itemBuilder: (context, index) {
-                  final donation = _donations[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(donation['items']),
-                      subtitle: Text('Date: ${donation['date']}'),
-                      trailing: Text(donation['status']),
-                    ),
+              child: StreamBuilder(
+                stream: donationStream,
+                builder: ((context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text("Error encountered! ${snapshot.error}"),
+                    );
+                  } else if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (!snapshot.hasData) {
+                    return const Center(
+                      child: Text("No Todos Found"),
+                    );
+                  }
+
+                  
+                  return ListView.builder(
+                    itemCount: snapshot.data?.docs.length,
+                    itemBuilder: (context, index) {
+                      Donation donation = Donation.fromJson(snapshot.data?.docs[index].data() as Map<String, dynamic>);
+                      return Card(
+                        child: ListTile(
+                          title: Text("Type: ${donation.getDonationTypes(donation)}"),
+                          subtitle: Text('Date: ${donation.date}'),
+                          trailing: Text(donation.status),
+                        ),
+                      );
+                    },
                   );
-                },
+                })
               ),
             ),
           ],

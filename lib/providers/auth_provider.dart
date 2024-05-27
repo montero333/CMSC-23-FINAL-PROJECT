@@ -15,9 +15,11 @@ class MyAuthProvider with ChangeNotifier {
   }
 
   Stream<User?> get userStream => uStream;
+  User? get user => authService.getUser();
+  String? get userID => authService.getUser()?.uid;
 
   void fetchAuthentication() {
-    uStream = authService.getUser();
+    uStream = authService.userSignedIn();
     notifyListeners();
   }
 

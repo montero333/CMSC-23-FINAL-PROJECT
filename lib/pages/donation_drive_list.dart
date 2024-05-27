@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../models/donation_drive_model.dart';
 import '../models/organization_model.dart';
+import '../providers/auth_provider.dart';
 import '../providers/organizations_provider.dart';
 import 'OrganizationInfoPage.dart';
 
@@ -31,7 +32,7 @@ class _DonationDriveListState extends State<DonationDriveList> {
           DonationDrive donationDrive = widget.donationDrives[index];
           return GestureDetector(
             onTap: () => {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => DonateToOrganizationDrive(donationDrive: donationDrive, userID: "user1",),))
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DonateToOrganizationDrive(donationDrive: donationDrive, userID: context.watch<MyAuthProvider>().userID),))
             },
             child: DonationDriveCard(donationDrive: donationDrive)
             ); // Pass data to your card widget

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:montero_cmsc23/pages/drawer.dart';
 import '../pages/donation_drive_list.dart';
 import 'package:provider/provider.dart';
 import '../models/organization_model.dart';
@@ -18,6 +19,7 @@ class _DonationOrganizationsListState extends State<DonationOrganizationsList> {
     final List<Organization> organizations = context.watch<OrganizationsProvider>().organizationsList;
 
     return Scaffold(
+      drawer: AppDrawer() ,
       appBar: AppBar(
         title: Text("List of Organizations"),
         backgroundColor: Colors.green,

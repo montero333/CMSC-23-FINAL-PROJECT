@@ -74,7 +74,15 @@ class Donation {
     };
   }
 
-
+  String getDonationTypes(Donation donation) {
+    List<String> types = [];
+    if (donation.food) types.add("Food");
+    if (donation.clothes) types.add("Clothes");
+    if (donation.cash) types.add("Cash");
+    if (donation.necessities) types.add("Necessities");
+    if (donation.others) types.add("Others");
+    return types.join(', ');
+  }
 
   void printDetails() {
     print('Donation Details:');

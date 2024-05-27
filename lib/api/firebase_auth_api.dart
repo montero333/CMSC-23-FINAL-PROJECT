@@ -6,15 +6,11 @@ class FirebaseAuthAPI {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   late String currentId;
 
-  FirebaseAuthAPI() {
-    if (auth.currentUser != null) {
-      currentId = auth.currentUser!.uid;
-    } else {
-      currentId = '';
-    }
+  User? getUser() {
+    return auth.currentUser;
   }
 
-  Stream<User?> getUser() {
+  Stream<User?> userSignedIn() {
     return auth.authStateChanges();
   }
 
@@ -70,7 +66,6 @@ class FirebaseAuthAPI {
 
   Future<void> signOut() async {
     await auth.signOut();
-    currentId = '';
   }
 
 }

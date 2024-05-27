@@ -79,6 +79,19 @@ class CredProvider with ChangeNotifier {
     }
   }
 
+  Future<Map<String,dynamic>?> getUserByID(String? userID) async {
+    try {
+      DocumentSnapshot userDoc = await firebaseService.getUserByUserID(userID);
+      return {
+        "firstName" : userDoc['firstName'],
+        "lastName" : userDoc['lastName']
+      };
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   
 
 }

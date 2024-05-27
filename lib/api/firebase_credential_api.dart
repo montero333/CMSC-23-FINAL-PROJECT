@@ -18,6 +18,17 @@ class FirebaseCredAPI {
     }
   }
 
+  //method to get user by ID
+  Future<DocumentSnapshot> getUserByUserID(String? userId) async {
+    QuerySnapshot querySnapshot = await usersCollection.where('userId', isEqualTo: userId).limit(1).get();
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs.first;
+    } else {
+      throw Exception('User not found');
+    }
+  }
+
+
   Future<String> addUser(Map<String, dynamic> user) async {
     // Check if the email already exists
     bool emailExists = await checkIfEmailExistsInDatabase(user['email']);
@@ -124,4 +135,6 @@ class FirebaseCredAPI {
       fontSize: 16.0,
     );
   }
+
+  
 }

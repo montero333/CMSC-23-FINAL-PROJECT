@@ -8,11 +8,11 @@ class DonationProvider with ChangeNotifier {
     late Stream<QuerySnapshot> _donationStream;
 
   // getter
-  Stream<QuerySnapshot> get todo => _donationStream;
+  Stream<QuerySnapshot> get donationStream => _donationStream;
   
   void fetchDonationsByUserID(String? uid) { //get the donations of a user based on their uid
     _donationStream = firebaseService.getAllDonationsByUserID(uid);
-    notifyListeners();
+    // notifyListeners();
   }
 
   void fetchDonationsByDriveID(String? driveID) { //get the donations of a drive based on their driveID
