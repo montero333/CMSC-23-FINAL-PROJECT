@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:montero_cmsc23/pages/admin_view_donors.dart';
 import '../pages/donor_main_page.dart';
 import 'package:montero_cmsc23/pages/signup_page.dart';
 import '../pages/organization_main_page.dart';
 import '../providers/donation_provider.dart';
 import 'package:provider/provider.dart';
 import 'pages/admin_main_page.dart';
-import 'pages/signup_page.dart';
 import 'pages/login_page.dart';
 import '../providers/credential_provider.dart';
 import '../providers/auth_provider.dart';
@@ -50,7 +50,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
-        '/donor':(context) => const DonorMainPage()
+        '/donor':(context) => const DonorMainPage(),
+        '/organization':(context) =>  OrganizationMainPage(),
+        '/admin-view-donors': (context) => AdminViewDonors()
       },
     );
   }

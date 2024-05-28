@@ -79,16 +79,16 @@ class _OrganizationsListState extends State<OrganizationsList> {
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                            padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12)),
-                            elevation: WidgetStatePropertyAll(4)
+                           // padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12)),
+                            //elevation: WidgetStatePropertyAll(4)
                           ),
                           onPressed: (){
                         }, child: const Icon(Icons.thumb_up,color: Colors.green,)),
                         SizedBox(width: 5),
                         ElevatedButton(
                           style: ButtonStyle(
-                            padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12)),
-                            elevation: WidgetStatePropertyAll(4)
+                            //padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12)),
+                            //elevation: WidgetStatePropertyAll(4)
                           ),
                           onPressed: (){
                           setState(() {

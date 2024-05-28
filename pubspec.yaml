@@ -31,6 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^1.1.1 # dependency for images
+  google_sign_in: ^6.2.1
+
 
 
 

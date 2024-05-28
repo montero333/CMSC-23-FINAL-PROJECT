@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                 }
 
                 else if (role == 'Admin') {
-                  Navigator.pushNamed(context, '/admin');
+                  Navigator.pushNamed(context, '/admin-view-donors');
                 }
     
               } else {
