@@ -1,4 +1,4 @@
-import 'package:milestone_1/models/organization_model.dart';
+import '../models/organization_model.dart';
 
 class Donor {
   String name;
