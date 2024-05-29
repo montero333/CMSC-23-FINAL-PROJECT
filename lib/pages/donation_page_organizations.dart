@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montero_cmsc23/pages/drawer.dart';
+import 'package:montero_cmsc23/providers/donation_drive_provider.dart';
 import '../pages/donation_drive_list.dart';
 import 'package:provider/provider.dart';
 import '../models/organization_model.dart';
@@ -30,7 +31,7 @@ class _DonationOrganizationsListState extends State<DonationOrganizationsList> {
           Organization organization = organizations[index];
           return GestureDetector(
             onTap: () => {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => DonationDriveList(donationDrives: organization.organizationDrives),))
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DonationDrivesPage(),))
             },
             child: OrganizationCard(organization: organization)
             ); // Pass data to your card widget

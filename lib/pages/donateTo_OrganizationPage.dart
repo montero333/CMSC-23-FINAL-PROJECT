@@ -192,7 +192,7 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Donate to ${widget.donationDrive.name}"),
+        title: Text("Donate to ${widget.donationDrive.title}"),
         backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(

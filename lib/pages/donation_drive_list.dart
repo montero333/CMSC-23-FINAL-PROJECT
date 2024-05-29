@@ -1,69 +1,60 @@
 import 'package:flutter/material.dart';
-import '../pages/donateTo_OrganizationPage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import '../providers/donation_drive_provider.dart';
+import 'drive_form.dart';
 
-import '../models/donation_drive_model.dart';
-import '../models/organization_model.dart';
-import '../providers/auth_provider.dart';
-import '../providers/organizations_provider.dart';
-import 'OrganizationInfoPage.dart';
-
-class DonationDriveList extends StatefulWidget {
-  final List<DonationDrive> donationDrives;
-
-  const DonationDriveList({super.key, required this.donationDrives});
-
-  _DonationDriveListState createState() => _DonationDriveListState();
-}
-
-class _DonationDriveListState extends State<DonationDriveList> {
-  // Replace with your actual data
-
+class DonationDrivesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("List of Donation Drives"),
-        backgroundColor: Colors.green,
+        title: Text('Donation Drives'),
       ),
-      body: ListView.builder(
-        itemCount: widget.donationDrives.length,
-        itemBuilder: (context, index) {
-          DonationDrive donationDrive = widget.donationDrives[index];
-          return GestureDetector(
-            onTap: () => {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => DonateToOrganizationDrive(donationDrive: donationDrive, userID: context.watch<MyAuthProvider>().userID),))
-            },
-            child: DonationDriveCard(donationDrive: donationDrive)
-            ); // Pass data to your card widget
+      body: FutureBuilder(
+        future: _initiate(context),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error initializing Firebase'));
+          } else {
+            return Consumer<DonationDriveProvider>(
+              builder: (context, donationDriveProvider, child) {
+                donationDriveProvider.fetchDonationDrives();
+                return ListView.builder(
+                  itemCount: donationDriveProvider.donationDrives.length,
+                  itemBuilder: (context, index) {
+                    final donationDrive = donationDriveProvider.donationDrives[index];
+                    return ListTile(
+                      title: Text(donationDrive.title),
+                      subtitle: Text(donationDrive.description),
+                      onTap: () {
+                        // Navigate to the donation drive detail or edit page
+                      },
+                    );
+                  },
+                );
+              },
+            );
+          }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => DonationDriveFormPage()),
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
-}
 
-
-class DonationDriveCard extends StatelessWidget {
-  final DonationDrive donationDrive;
-
-  const DonationDriveCard({super.key, required this.donationDrive});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(
-              donationDrive.name,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8.0),
-            Text(donationDrive.description),
-          ],
-        ),
-      ),
-    );
+  Future<void> _initiate(BuildContext context) async {
+    await FirebaseAuth.instance.signInAnonymously();
+    await Provider.of<DonationDriveProvider>(context, listen: false).fetchDonationDrives();
   }
 }
