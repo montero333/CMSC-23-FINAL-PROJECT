@@ -104,9 +104,9 @@ class OrganizationInfo extends StatelessWidget {
                     child: ListTile(
                       title: Text(donationDrive.title),
                       subtitle: Text(donationDrive.description),
-                      trailing: donationDrive.imageUrls != null
-                          ? Image.network(donationDrive.imageUrls! as String)
-                          : null,
+                      // trailing: donationDrive.imageUrls != null
+                      //     ? Image.network(donationDrive.imageUrls! as String)
+                      //     : null,
                     ),
                   );
                 },

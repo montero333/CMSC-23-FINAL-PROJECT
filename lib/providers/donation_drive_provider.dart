@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
@@ -6,30 +7,18 @@ import '../api/firebase_drive_donation_api.dart';
 
 class DonationDriveProvider with ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
+  late Stream<List<DonationDrive>> _donationDriveStream; // Adjusted the type of the stream
   List<DonationDrive> _donationDrives = [];
 
   List<DonationDrive> get donationDrives => _donationDrives;
+  Stream<List<DonationDrive>> get donationDriveStream => _donationDriveStream;
 
   Future<void> fetchDonationDrives() async {
     _donationDrives = await _firestoreService.getDonationDrives();
     notifyListeners();
   }
 
-  Future<void> addDonationDrive(DonationDrive donationDrive, List<File> imageFiles) async { // Changed to List<File>
-    List<String> imageUrls = [];
-
-    for (File imageFile in imageFiles) {
-      final storageReference = FirebaseStorage.instance
-          .ref()
-          .child('donation_drive_images')
-          .child('${donationDrive.id}_${imageFiles.indexOf(imageFile)}.jpg'); // Unique name for each image
-      final uploadTask = storageReference.putFile(imageFile);
-      final snapshot = await uploadTask.whenComplete(() => null);
-      final imageUrl = await snapshot.ref.getDownloadURL();
-      imageUrls.add(imageUrl);
-    }
-
-    donationDrive.imageUrls = imageUrls;
+  Future<void> addDonationDrive(DonationDrive donationDrive) async {
     await _firestoreService.createDonationDrive(donationDrive);
     _donationDrives.add(donationDrive);
     notifyListeners();
@@ -48,5 +37,23 @@ class DonationDriveProvider with ChangeNotifier {
     await _firestoreService.deleteDonationDrive(id);
     _donationDrives.removeWhere((dd) => dd.id == id);
     notifyListeners();
+  }
+
+  Future<void> addDonationToDrive(String driveId, String donationId) async {
+    await _firestoreService.addDonationToDrive(driveId, donationId);
+    final index = _donationDrives.indexWhere((dd) => dd.id == driveId);
+    if (index != -1 && !_donationDrives[index].donationIds!.contains(donationId)) {
+      _donationDrives[index].donationIds!.add(donationId);
+      notifyListeners();
+    }
+  }
+
+  Future<void> removeDonationFromDrive(String driveId, String donationId) async {
+    await _firestoreService.removeDonationFromDrive(driveId, donationId);
+    final index = _donationDrives.indexWhere((dd) => dd.id == driveId);
+    if (index != -1) {
+      _donationDrives[index].donationIds!.remove(donationId);
+      notifyListeners();
+    }
   }
 }

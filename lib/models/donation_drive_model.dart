@@ -1,32 +1,40 @@
 // lib/models/donation_drive.dart
+import 'dart:io';
+
 class DonationDrive {
   String id;
   String title;
   String description;
-  List<String>? imageUrls; // Changed imageUrl to List<String>
+  String? proofPhotoUrl;
+  List<String>? donationIds; // Added list of donation IDs
 
   DonationDrive({
     required this.id,
     required this.title,
     required this.description,
-    this.imageUrls,
+    this.proofPhotoUrl,
+    this.donationIds, String? imageUrl,
   });
 
-  Map<String, dynamic> toMap() {
+  // Convert a DonationDrive object to a JSON map
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'title': title,
       'description': description,
-      'imageUrls': imageUrls, // Changed imageUrl to imageUrls
+      'imageUrls': proofPhotoUrl,
+      'donationIds': donationIds, // Added donationIds
     };
   }
 
-  static DonationDrive fromMap(Map<String, dynamic> map) {
+  // Create a DonationDrive object from a JSON map
+  static DonationDrive fromJson(Map<String, dynamic> json) {
     return DonationDrive(
-      id: map['id'],
-      title: map['title'],
-      description: map['description'],
-      imageUrls: map['imageUrls'] != null ? List<String>.from(map['imageUrls']) : null, // Changed imageUrl to imageUrls
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      proofPhotoUrl: json['proofPhotoUrl'],
+      donationIds: json['donationIds'] != null ? List<String>.from(json['donationIds']) : null, // Added donationIds
     );
   }
 }

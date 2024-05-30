@@ -185,7 +185,6 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
     } on PlatformException catch (e) {
       print("Failed to pick image: $e");
     }
-
   }
 
   @override

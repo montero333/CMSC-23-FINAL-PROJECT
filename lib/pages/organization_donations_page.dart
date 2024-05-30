@@ -11,9 +11,6 @@ class DonationListPage extends StatelessWidget {
     donationProvider.fetchDonationsByUserID("E2qk5ED1BgNC961QzMacveABN392"); // Replace with the appropriate user ID
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Donations List'),
-      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: donationProvider.donationStream,
         builder: (context, snapshot) {

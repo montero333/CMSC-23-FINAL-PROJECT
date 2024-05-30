@@ -18,7 +18,7 @@ class Organization {
       'id': id,
       'name': name,
       'description': description,
-      'donationDrives': donationDrives.map((drive) => drive.toMap()).toList(),
+      'donationDrives': donationDrives.map((drive) => drive.toJson()).toList(),
     };
   }
 
@@ -28,7 +28,7 @@ class Organization {
       name: map['name'],
       description: map['description'],
       donationDrives: List<DonationDrive>.from(
-        map['donationDrives']?.map((drive) => DonationDrive.fromMap(drive))
+        map['donationDrives']?.map((drive) => DonationDrive.fromJson(drive))
       ),
     );
   }
