@@ -22,6 +22,15 @@ class FirebaseDonationsAPI {
     }
   }
 
+    Future<String> updateDonationStatus(String id, String status) async {
+    try {
+      await db.collection("donations").doc(id).update({'status': status});
+      return "Status updated successfully!";
+    } catch (e) {
+      return "Error updating status: $e";
+    }
+  }
+  
   Stream<QuerySnapshot> getAllDonationsByUserID(String? uid) {
     return db.collection("donations").where("userID", isEqualTo: uid).snapshots();
   }

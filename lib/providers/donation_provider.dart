@@ -12,7 +12,7 @@ class DonationProvider with ChangeNotifier {
   
   void fetchDonationsByUserID(String? uid) { //get the donations of a user based on their uid
     _donationStream = firebaseService.getAllDonationsByUserID(uid);
-    // notifyListeners();
+    notifyListeners();
   }
 
   void fetchDonationsByDriveID(String? driveID) { //get the donations of a drive based on their driveID
@@ -32,6 +32,14 @@ class DonationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
+  Future<String> updateDonationStatus(String id, String status) async {
+    try {
+      String message = await firebaseService.updateDonationStatus(id, status);
+      notifyListeners();
+      return message;
+    } catch (e) {
+      return "Error updating status: $e";
+    }
+  }
 
 }

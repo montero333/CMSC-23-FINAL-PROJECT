@@ -56,7 +56,7 @@ class _OrganizationMainPageState extends State<OrganizationMainPage> {
   Widget _buildBody(int index) {
     switch (index) {
       case 0:
-        return DonationsPage();
+        return DonationListPage();
       case 1:
         return DonationDrivesPage();
       case 2:
