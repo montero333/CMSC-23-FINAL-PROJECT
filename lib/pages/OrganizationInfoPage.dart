@@ -1,91 +1,120 @@
 import 'package:flutter/material.dart';
-
 import '../models/organization_model.dart';
 
 class OrganizationInfo extends StatelessWidget {
   final Organization organization;
 
-  const OrganizationInfo({super.key, required this.organization});
+  const OrganizationInfo({Key? key, required this.organization}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-        appBar: AppBar(
-          leading: BackButton(
-            color: Colors.black,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text(
-            "Summary",
-            style: TextStyle(color: Colors.white),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+          color: Colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        body: Column(
-      children: [
-        //text for displaying the summary title
-        const Text(
-            "SUMMARY",
-            style: TextStyle(
-            fontSize: 24,
-            color: Colors.black,
-            fontWeight: FontWeight.bold)
-          ),
-        //row for organizing the summary details
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //sized box for providing spacing
-          children: [const SizedBox(width: 25),
-            //column for displaying labels
-            const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            Text(
-                "Organization Name:",
-                style: TextStyle(
-                fontSize: 18,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          "Summary",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "SUMMARY",
+              style: TextStyle(
+                fontSize: 24,
                 color: Colors.black,
-                fontWeight: FontWeight.bold)
+                fontWeight: FontWeight.bold,
               ),
-              Text(
-                "Donations:",
-                style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.bold)
-              )
-          ],
-          ),
-          //sized box for providing spacing
-          const SizedBox(width: 25), 
-          //expanded column for displaying dynamic user input details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  organization.name,
-                  style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontStyle: FontStyle.italic)
+                const Text(
+                  "Organization Name:",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                Text(
-                  "${organization.donation}",
-                  style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontStyle: FontStyle.italic)
+                Expanded(
+                  child: Text(
+                    organization.name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    textAlign: TextAlign.end,
+                  ),
                 ),
               ],
             ),
-          )
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Description:",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    organization.description,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              "Donation Drives:",
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: ListView.builder(
+                itemCount: organization.donationDrives.length,
+                itemBuilder: (context, index) {
+                  final donationDrive = organization.donationDrives[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(donationDrive.title),
+                      subtitle: Text(donationDrive.description),
+                      trailing: donationDrive.imageUrls != null
+                          ? Image.network(donationDrive.imageUrls! as String)
+                          : null,
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
-      ],
-    )
-      ); 
+      ),
+    );
   }
 }

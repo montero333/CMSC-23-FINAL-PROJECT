@@ -18,11 +18,10 @@ class DonationDrivesPage extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error initializing Firebase'));
+            return Center(child: Text('Error initializing Firebase: ${snapshot.error}'));
           } else {
             return Consumer<DonationDriveProvider>(
               builder: (context, donationDriveProvider, child) {
-                donationDriveProvider.fetchDonationDrives();
                 return ListView.builder(
                   itemCount: donationDriveProvider.donationDrives.length,
                   itemBuilder: (context, index) {
@@ -54,7 +53,12 @@ class DonationDrivesPage extends StatelessWidget {
   }
 
   Future<void> _initiate(BuildContext context) async {
-    await FirebaseAuth.instance.signInAnonymously();
-    await Provider.of<DonationDriveProvider>(context, listen: false).fetchDonationDrives();
+    try {
+      await Firebase.initializeApp();
+      await FirebaseAuth.instance.signInAnonymously();
+      await Provider.of<DonationDriveProvider>(context, listen: false).fetchDonationDrives();
+    } catch (e) {
+      throw ('Failed to initialize Firebase: $e');
+    }
   }
 }

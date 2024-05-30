@@ -1,28 +1,59 @@
 import 'package:flutter/material.dart';
-import '../models/donation_drive_model.dart';
 import '../models/organization_model.dart';
+import '../api/firebase_organizations.dart';
 
+class OrganizationProvider with ChangeNotifier {
+  OrganizationApi _organizationApi = OrganizationApi();
+  List<Organization> _organizations = [];
+  bool _isLoading = false;
 
-class OrganizationsProvider with ChangeNotifier {
-  final List<Organization> _organizationList = [
-    // Organization("JORDAN INC", 20000, [
-    //   DonationDrive("1","SHOE4EVERYONE", 0, "Donate to TAYTAY PEOPLE","1")
-    // ],"Donate to shoeless people"),
-    // Organization("LOSBANOS INC", 20000, [
-    //   DonationDrive("2","Piso Mula Sa Puso", 0, "Tulungan ang mga tao makaahon","2")
-    // ], "Donate to the Los Banos People")
-  ];
-  
-  List<Organization> get organizationsList => _organizationList;
+  List<Organization> get organizations => _organizations;
+  bool get isLoading => _isLoading;
 
-  void addOrganization(Organization organization) {
-    _organizationList.add(organization);
+  Future<void> fetchOrganizations() async {
+    _isLoading = true;
     notifyListeners();
+
+    try {
+      _organizations = await _organizationApi.fetchOrganizations();
+    } catch (error) {
+      print(error);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
-  void removeAll() {
-    _organizationList.clear();
-    notifyListeners();
+  Future<void> addOrganization(Organization organization) async {
+    try {
+      final newOrganization = await _organizationApi.createOrganization(organization);
+      _organizations.add(newOrganization);
+      notifyListeners();
+    } catch (error) {
+      print(error);
+    }
   }
 
+  Future<void> updateOrganization(Organization organization) async {
+    try {
+      final updatedOrganization = await _organizationApi.updateOrganization(organization);
+      final index = _organizations.indexWhere((org) => org.id == organization.id);
+      if (index != -1) {
+        _organizations[index] = updatedOrganization;
+        notifyListeners();
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> deleteOrganization(String id) async {
+    try {
+      await _organizationApi.deleteOrganization(id);
+      _organizations.removeWhere((org) => org.id == id);
+      notifyListeners();
+    } catch (error) {
+      print(error);
+    }
+  }
 }

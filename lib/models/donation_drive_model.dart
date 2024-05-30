@@ -3,17 +3,13 @@ class DonationDrive {
   String id;
   String title;
   String description;
-  DateTime startDate;
-  DateTime endDate;
-  String? imageUrl;
+  List<String>? imageUrls; // Changed imageUrl to List<String>
 
   DonationDrive({
     required this.id,
     required this.title,
     required this.description,
-    required this.startDate,
-    required this.endDate,
-    this.imageUrl,
+    this.imageUrls,
   });
 
   Map<String, dynamic> toMap() {
@@ -21,20 +17,16 @@ class DonationDrive {
       'id': id,
       'title': title,
       'description': description,
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
-      'imageUrl': imageUrl,
+      'imageUrls': imageUrls, // Changed imageUrl to imageUrls
     };
   }
 
-  factory DonationDrive.fromMap(Map<String, dynamic> map) {
+  static DonationDrive fromMap(Map<String, dynamic> map) {
     return DonationDrive(
       id: map['id'],
       title: map['title'],
       description: map['description'],
-      startDate: DateTime.parse(map['startDate']),
-      endDate: DateTime.parse(map['endDate']),
-      imageUrl: map['imageUrl'],
+      imageUrls: map['imageUrls'] != null ? List<String>.from(map['imageUrls']) : null, // Changed imageUrl to imageUrls
     );
   }
 }

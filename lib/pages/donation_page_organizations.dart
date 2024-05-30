@@ -17,7 +17,7 @@ class _DonationOrganizationsListState extends State<DonationOrganizationsList> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Organization> organizations = context.watch<OrganizationsProvider>().organizationsList;
+    final List<Organization> organizations = context.watch<OrganizationProvider>().organizations;
 
     return Scaffold(
       drawer: AppDrawer() ,

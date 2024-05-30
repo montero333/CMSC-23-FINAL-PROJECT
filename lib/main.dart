@@ -13,6 +13,7 @@ import 'providers/donors_provider.dart';
 import 'providers/organizations_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'providers/donation_drive_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,11 +25,13 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: ((context) => OrganizationsProvider())),
+        ChangeNotifierProvider(create: ((context) => OrganizationProvider())),
         ChangeNotifierProvider(create: ((context) => DonorsProvider())),
         ChangeNotifierProvider(create: ((context) => DonationProvider())),
         ChangeNotifierProvider(create: ((context) => CredProvider())),
         ChangeNotifierProvider(create: ((context) => MyAuthProvider())),
+        ChangeNotifierProvider(create: ((context) => DonationDriveProvider())),
+
       ],
       child: MyApp(),
     ),
