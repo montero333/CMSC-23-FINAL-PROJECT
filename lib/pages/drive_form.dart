@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +10,7 @@ import '../models/donation_model.dart';
 import '../models/donation_drive_model.dart';
 import '../providers/donation_drive_provider.dart';
 import '../providers/donation_provider.dart';
+import '../providers/credential_provider.dart';
 
 class CreateDonationDriveForm extends StatefulWidget {
   @override
@@ -31,33 +33,51 @@ class _CreateDonationDriveFormState extends State<CreateDonationDriveForm> {
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      final donationDriveProvider = Provider.of<DonationDriveProvider>(context, listen: false);
+      if (_selectedDonationIds.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please select at least one donation')),
+        );
+        return;
+      }
 
-      // Create the donation drive data
+      if (imageUrl == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please pick an image')),
+        );
+        return;
+      }
+
+      final donationDriveProvider = Provider.of<DonationDriveProvider>(context, listen: false);
+      final credProvider = Provider.of<CredProvider>(context, listen: false);
+
+      // Get the current user's ID
+      final orgID = await credProvider.getCurrentUserId();
+      // late User? _currentUser = FirebaseAuth.instance.currentUser;
       final donationDrive = DonationDrive(
         id: FirebaseFirestore.instance.collection('donation_drives').doc().id,
         title: _titleController.text,
         description: _descriptionController.text,
         donationIds: _selectedDonationIds,
-        proofPhotoUrl: ImageConstants().convertToBase64(imageUrl)
+        proofPhotoUrl: ImageConstants().convertToBase64(imageUrl),
+        orgID: orgID!,
       );
 
       try {
         // Add donation drive to Firestore and update provider
         await donationDriveProvider.addDonationDrive(donationDrive);
-        
+
         // Show a success message
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Donation drive created successfully!'),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Donation drive created successfully!')),
+        );
 
         // Navigate back to the original screen
         Navigator.pop(context);
       } catch (e) {
         // Show an error message
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to create donation drive: $e'),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create donation drive: $e')),
+        );
       }
     }
   }
@@ -79,6 +99,9 @@ class _CreateDonationDriveFormState extends State<CreateDonationDriveForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Create Donation Drive'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -136,33 +159,32 @@ class _CreateDonationDriveFormState extends State<CreateDonationDriveForm> {
               SizedBox(height: 20),
               ElevatedButton.icon(
                 icon: Icon(Icons.photo_library),
-                onPressed: () => {
-                  pickImage(ImageSource.gallery)
-                },
+                onPressed: () => pickImage(ImageSource.gallery),
                 label: Text("Pick from Gallery"),
               ),
               if (imageUrl != null) // Show image preview if available
                 Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Image you picked:"),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: Image.file(imageUrl!, width: 200, height: 200,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Image you picked:"),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: Image.file(imageUrl!, width: 200, height: 200),
+                        ),
+                      ],
                     ),
+                    ElevatedButton(
+                      onPressed: () => {
+                        setState(() {
+                          imageUrl = null;
+                        })
+                      },
+                      child: Text("Remove Image"),
+                    )
                   ],
                 ),
-                ElevatedButton(onPressed: () => {
-                  setState(() {
-                    imageUrl = null;
-                  })
-                }, 
-                child: Text("Remove Image"),
-                )
-              ],
-            ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submitForm,
@@ -277,4 +299,3 @@ class _DonationSelectionTileState extends State<DonationSelectionTile> {
     );
   }
 }
-

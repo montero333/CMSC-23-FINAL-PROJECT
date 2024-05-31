@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:montero_cmsc23/pages/organization_profile_page.dart';
 import 'organization_donations_page.dart';
 import 'donation_drive_list.dart';
 
@@ -13,17 +14,17 @@ class _OrganizationMainPageState extends State<OrganizationMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Organization Main Page'),
-        actions: [ // Add actions to the app bar
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              _logout(context);
-            },
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: Text('Organization Main Page'),
+      //   actions: [ // Add actions to the app bar
+      //     IconButton(
+      //       icon: Icon(Icons.logout),
+      //       onPressed: () {
+      //         _logout(context);
+      //       },
+      //     ),
+      //   ],
+      // ),
       body: _buildBody(_currentIndex),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -60,7 +61,7 @@ class _OrganizationMainPageState extends State<OrganizationMainPage> {
       case 1:
         return DonationDrivesPage();
       case 2:
-        return _buildProfilePage();
+        return OrganizationProfilePage();
       default:
         return Container(); // Return an empty container as a default
     }

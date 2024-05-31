@@ -5,12 +5,14 @@ class Organization {
   String name;
   String description;
   List<DonationDrive> donationDrives;
+  bool status;
 
   Organization({
     required this.id,
     required this.name,
     required this.description,
     required this.donationDrives,
+    required this.status,
   });
 
   Map<String, dynamic> toMap() {
@@ -19,6 +21,7 @@ class Organization {
       'name': name,
       'description': description,
       'donationDrives': donationDrives.map((drive) => drive.toJson()).toList(),
+      'status': status,
     };
   }
 
@@ -27,9 +30,8 @@ class Organization {
       id: map['id'],
       name: map['name'],
       description: map['description'],
-      donationDrives: List<DonationDrive>.from(
-        map['donationDrives']?.map((drive) => DonationDrive.fromJson(drive))
-      ),
+      donationDrives: List<DonationDrive>.from(map['donationDrives']?.map((drive) => DonationDrive.fromJson(drive)) ?? []),
+      status: map['status'],
     );
   }
 }

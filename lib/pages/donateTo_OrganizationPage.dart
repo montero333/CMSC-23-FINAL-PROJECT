@@ -111,7 +111,7 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                   ),
                 );
                 Donation donation = Donation(
-                  driveID: widget.donationDrive.id, 
+                  orgID: widget.donationDrive.id, 
                   userID: widget.userID,
                   food: donationFormInput["food"],
                   clothes: donationFormInput["clothes"],

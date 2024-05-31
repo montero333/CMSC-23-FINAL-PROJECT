@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../models/credential_model.dart';
 import '../api/firebase_credential_api.dart';
@@ -6,6 +7,7 @@ import '../api/firebase_credential_api.dart';
 class CredProvider with ChangeNotifier {
   late FirebaseCredAPI firebaseService;
   late Stream<QuerySnapshot> _userStream;
+  late FirebaseAuth _auth;
 
   late String email;
   late String firstName;
@@ -33,12 +35,29 @@ class CredProvider with ChangeNotifier {
 
   CredProvider() {
     firebaseService = FirebaseCredAPI();
+    _auth = FirebaseAuth.instance;
     fetchUsers();
+  }
+
+  Future<String?> getCurrentUserId() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        _currentId = user.uid;
+        return user.uid;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("Error getting current user ID: $e");
+      return null;
+    }
   }
   
   void changeId(String a) {
     _currentId = a;
   }
+
 
   Stream<QuerySnapshot> get users => _userStream;
 

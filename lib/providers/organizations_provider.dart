@@ -13,7 +13,6 @@ class OrganizationProvider with ChangeNotifier {
   Future<void> fetchOrganizations() async {
     _isLoading = true;
     notifyListeners();
-
     try {
       _organizations = await _organizationApi.fetchOrganizations();
     } catch (error) {
@@ -21,16 +20,6 @@ class OrganizationProvider with ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
-    }
-  }
-
-  Future<void> addOrganization(Organization organization) async {
-    try {
-      final newOrganization = await _organizationApi.createOrganization(organization);
-      _organizations.add(newOrganization);
-      notifyListeners();
-    } catch (error) {
-      print(error);
     }
   }
 

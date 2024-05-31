@@ -1,6 +1,6 @@
 class Donation {
   String? id;
-  String? driveID; //para saang donation drive yung donation
+  String? orgID; //para saang donation drive yung donation
   String? userID; //sinong user nag donate
   bool food;
   bool clothes;
@@ -18,7 +18,7 @@ class Donation {
 
   Donation({
     this.id,
-    required this.driveID,
+    required this.orgID,
     required this.userID,
     required this.food,
     required this.clothes,
@@ -38,7 +38,7 @@ class Donation {
   factory Donation.fromJson(Map<String, dynamic> json) {
     return Donation(
       id: json['id'],
-      driveID: json['driveID'],
+      orgID: json['orgID'],
       userID: json['userID'],
       food: json['food'],
       clothes: json['clothes'],
@@ -57,7 +57,7 @@ class Donation {
 
   Map<String, dynamic> toJson(Donation donation) {
     return {
-      'driveID': donation.driveID,
+      'orgID': donation.orgID,
       'userID': donation.userID,
       'food': donation.food,
       'clothes': donation.clothes,
@@ -87,7 +87,7 @@ class Donation {
   void printDetails() {
     print('Donation Details:');
     print('ID: ${id ?? 'N/A'}');
-    print('Drive ID: $driveID'); 
+    print('Drive ID: $orgID'); 
     print('User ID: $userID'); 
     print('Food: $food');
     print('Clothes: $clothes');

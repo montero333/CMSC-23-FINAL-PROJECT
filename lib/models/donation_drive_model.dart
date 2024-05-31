@@ -7,6 +7,7 @@ class DonationDrive {
   String description;
   String? proofPhotoUrl;
   List<String>? donationIds; // Added list of donation IDs
+  String orgID;
 
   DonationDrive({
     required this.id,
@@ -14,6 +15,7 @@ class DonationDrive {
     required this.description,
     this.proofPhotoUrl,
     this.donationIds, String? imageUrl,
+    required this.orgID
   });
 
   // Convert a DonationDrive object to a JSON map
@@ -24,6 +26,7 @@ class DonationDrive {
       'description': description,
       'imageUrls': proofPhotoUrl,
       'donationIds': donationIds, // Added donationIds
+      'orgID':orgID
     };
   }
 
@@ -35,6 +38,7 @@ class DonationDrive {
       description: json['description'],
       proofPhotoUrl: json['proofPhotoUrl'],
       donationIds: json['donationIds'] != null ? List<String>.from(json['donationIds']) : null, // Added donationIds
+      orgID: json['orgID'],
     );
   }
 }

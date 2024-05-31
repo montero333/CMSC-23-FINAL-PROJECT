@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../models/donation_model.dart';
 import '../providers/donation_drive_provider.dart';
 import '../api/firebase_drive_donation_api.dart';
+import '../providers/credential_provider.dart';
 
 class EditDonationDriveForm extends StatefulWidget {
   final DonationDrive donationDrive;
@@ -81,17 +82,21 @@ class _EditDonationDriveFormState extends State<EditDonationDriveForm> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () async {
+                final credProvider = Provider.of<CredProvider>(context, listen: false); 
+                final orgID = await credProvider.getCurrentUserId();
                 final updatedDonationDrive = DonationDrive(
                   id: widget.donationDrive.id,
                   title: _titleController.text,
                   description: _descriptionController.text,
-                  donationIds: _existingDonationIds, 
+                  donationIds: _existingDonationIds,
+                  orgID: orgID!, // Use the CredProvider instance to get the current user's ID
                 );
                 await Provider.of<DonationDriveProvider>(context, listen: false).updateDonationDrive(updatedDonationDrive);
                 Navigator.pop(context); 
               },
               child: Text('Save Changes'),
             ),
+
             ElevatedButton(
               onPressed: () async {
                 await _deleteDonationDrive(context);
