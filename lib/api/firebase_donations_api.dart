@@ -22,10 +22,19 @@ class FirebaseDonationsAPI {
     }
   }
 
-    Future<String> updateDonationStatus(String id, String status) async {
+  Future<String> updateDonationStatus(String id, String status) async {
     try {
       await db.collection("donations").doc(id).update({'status': status});
       return "Status updated successfully!";
+    } catch (e) {
+      return "Error updating status: $e";
+    }
+  }
+
+  Future<String> updateDriveID(String id, String driveID) async {
+    try {
+      await db.collection("donations").doc(id).update({'driveID': driveID});
+      return "Added to drive $driveID";
     } catch (e) {
       return "Error updating status: $e";
     }

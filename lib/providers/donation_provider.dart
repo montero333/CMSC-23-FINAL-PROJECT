@@ -42,4 +42,13 @@ class DonationProvider with ChangeNotifier {
     }
   }
 
+    Future<String> updateDriveID(String id, String driveID) async {
+    try {
+      String message = await firebaseService.updateDonationStatus(id, driveID);
+      notifyListeners();
+      return message;
+    } catch (e) {
+      return "Error updating status: $e";
+    }
+  }
 }

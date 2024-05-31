@@ -7,7 +7,7 @@ import '../api/firebase_drive_donation_api.dart';
 
 class DonationDriveProvider with ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
-  late Stream<List<DonationDrive>> _donationDriveStream; // Adjusted the type of the stream
+  late final Stream<List<DonationDrive>> _donationDriveStream = _firestoreService.streamDonationDrives(); // Initialize the stream
   List<DonationDrive> _donationDrives = [];
 
   List<DonationDrive> get donationDrives => _donationDrives;
