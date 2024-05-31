@@ -1,31 +1,63 @@
-import 'package:elbi_donation_system/pages/admin_homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:montero_cmsc23/pages/view_all_donors_page.dart';
+import '../pages/donor_main_page.dart';
+import 'package:montero_cmsc23/pages/signup_page.dart';
+import '../pages/organization_main_page.dart';
+import '../providers/donation_provider.dart';
+import 'package:provider/provider.dart';
+import 'pages/admin_main_page.dart';
+import 'pages/login_page.dart';
+import '../providers/credential_provider.dart';
+import '../providers/auth_provider.dart';
+import 'providers/donors_provider.dart';
+import 'providers/organizations_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'providers/donation_drive_provider.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: ((context) => OrganizationProvider())),
+        ChangeNotifierProvider(create: ((context) => DonorsProvider())),
+        ChangeNotifierProvider(create: ((context) => DonationProvider())),
+        ChangeNotifierProvider(create: ((context) => CredProvider())),
+        ChangeNotifierProvider(create: ((context) => MyAuthProvider())),
+        ChangeNotifierProvider(create: ((context) => DonationDriveProvider())),
+
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatefulWidget {
-
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-
+  // Root widget of the application
   @override
   Widget build(BuildContext context) {
-    //map of routes
-    Map<String, Widget Function(BuildContext)> routes = {
-        "/home" : (context) => const AdminHomePage(),
-      };
-
     return MaterialApp(
-      theme: ThemeData(appBarTheme: const AppBarTheme(color: Color.fromARGB(255, 7, 7, 8)),scaffoldBackgroundColor: const Color.fromARGB(255, 18, 18, 19)),
-      initialRoute: "/home",
-      routes: routes,
+      title: 'Authentication',
+      initialRoute: '/login',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/signup': (context) => const SignupPage(),
+        '/donor':(context) => const DonorMainPage(),
+        '/organization':(context) =>  OrganizationMainPage(),
+        '/admin-view-donors': (context) => AdminViewDonors(),
+        '/admin-main':(context) => const AdminMainPage()
+      },
     );
   }
 }
