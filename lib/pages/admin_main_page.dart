@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:montero_cmsc23/pages/view_all_donors_page.dart';
-import 'view_all_organizations_page.dart';  // Create this page
-import 'view_all_donations_page.dart';              // Create this page
+import 'view_all_organizations_page.dart';  
+import 'view_all_donations_page.dart';              
 
 class AdminMainPage extends StatelessWidget {
   const AdminMainPage({super.key});

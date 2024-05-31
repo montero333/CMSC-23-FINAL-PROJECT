@@ -5,7 +5,7 @@ import '../providers/auth_provider.dart';
 import '../pages/signup_page.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -62,19 +62,28 @@ class _LoginPageState extends State<LoginPage> {
               String? role = await context.read<CredProvider>().getUserRoleByEmail(email);
               if (role != null) {
                 print("User role: $role");
+                // Check if the user is approved
+                if (role == 'Organization') {
+                  bool isApproved = await context.read<CredProvider>().isOrganizationApproved(email);
+                  if (!isApproved) {
+                    // Show Snackbar error if the organization is not approved
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Your organization is not yet approved.'),
+                        duration: Duration(seconds: 3),
+                      ),
+                    );
+                    return;
+                  }
+                }
                 // Navigate based on user role
                 if (role == 'Donor') {
                   Navigator.pushNamed(context, '/donor');
-                } 
-                
-                else if (role == 'Organization') {
+                } else if (role == 'Organization') {
                   Navigator.pushNamed(context, '/organization');
-                }
-
-                else if (role == 'Admin') {
+                } else if (role == 'Admin') {
                   Navigator.pushNamed(context, '/admin-main');
                 }
-    
               } else {
                 print("Failed to retrieve user role.");
               }
