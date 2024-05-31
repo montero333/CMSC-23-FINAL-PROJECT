@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:montero_cmsc23/pages/DonationsPage.dart';
 import 'package:montero_cmsc23/pages/view_all_donors_page.dart';
 import 'view_all_organizations_page.dart';  // Create this page
 import 'view_all_donations_page.dart';              // Create this page
@@ -36,7 +35,7 @@ class AdminMainPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ViewAllOrganizationsPage(),
+                    builder: (context) =>  ViewAllOrganizationsPage(),
                   ),
                 );
               },
