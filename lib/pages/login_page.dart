@@ -16,6 +16,22 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your email';
+    }
+    // Add regex validation for email format if needed
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your password';
+    }
+    // Add additional password validation if needed
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final email = TextFormField(
@@ -24,12 +40,7 @@ class _LoginPageState extends State<LoginPage> {
       decoration: const InputDecoration(
         hintText: "Email",
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your email';
-        }
-        return null;
-      },
+      validator: validateEmail,
     );
 
     final password = TextFormField(
@@ -39,12 +50,7 @@ class _LoginPageState extends State<LoginPage> {
       decoration: const InputDecoration(
         hintText: 'Password',
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your password';
-        }
-        return null;
-      },
+      validator: validatePassword,
     );
 
     final loginButton = Padding(
@@ -88,7 +94,13 @@ class _LoginPageState extends State<LoginPage> {
                 print("Failed to retrieve user role.");
               }
             } else {
-              print("Login failed.");
+              // Show Snackbar error for login failure
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Incorrect email or password.'),
+                  duration: Duration(seconds: 3),
+                ),
+              );
             }
           }
         },
