@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:montero_cmsc23/pages/admin_view_donors.dart';
+import 'package:montero_cmsc23/pages/view_all_donors_page.dart';
 import '../pages/donor_main_page.dart';
 import 'package:montero_cmsc23/pages/signup_page.dart';
 import '../pages/organization_main_page.dart';
@@ -55,7 +55,8 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignupPage(),
         '/donor':(context) => const DonorMainPage(),
         '/organization':(context) =>  OrganizationMainPage(),
-        '/admin-view-donors': (context) => AdminViewDonors()
+        '/admin-view-donors': (context) => AdminViewDonors(),
+        '/admin-main':(context) => const AdminMainPage()
       },
     );
   }

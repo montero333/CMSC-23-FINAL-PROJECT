@@ -111,6 +111,20 @@ class CredProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> isOrganizationApproved(String email) async {
+  try {
+    DocumentSnapshot userDoc = await firebaseService.getUserByEmail(email);
+    String? userRole = userDoc['userRole'];
+    bool isApproved = userDoc['isApproved'] ?? false;
+
+    return userRole == 'Organization' && isApproved;
+  } catch (e) {
+    print('Error checking organization approval: $e');
+    return false;
+  }
+}
+
+
   
 
 }

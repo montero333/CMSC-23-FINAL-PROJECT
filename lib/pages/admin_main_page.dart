@@ -1,57 +1,77 @@
 import 'package:flutter/material.dart';
-import 'DonationsPage.dart';
-import 'OrganizationsPage.dart';
-import 'admin_list.dart';
-import 'approval_page.dart';
+import 'package:montero_cmsc23/pages/view_all_donors_page.dart';
+import 'view_all_organizations_page.dart';  
+import 'view_all_donations_page.dart';              
 
-class AdminMainPage extends StatefulWidget {
-  @override
-  _AdminMainPageState createState() => _AdminMainPageState();
-}
-
-class _AdminMainPageState extends State<AdminMainPage> {
-  int _currentIndex = 0;
-
-  final List<Widget> _pages = [
-    // Add your pages here
-    OrganizationsPage(), // Placeholder for the first page
-    DonorsPage(), // Approval page
-  ];
+class AdminMainPage extends StatelessWidget {
+  const AdminMainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Main Page'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              // Handle logout action
-              // Navigate back to the login page
-              Navigator.pushNamed(context, '/login');
-            },
-          ),
-        ],
+        title: const Text('Admin Dashboard'),
       ),
-      body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.groups),
-            label: 'Organizations',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.volunteer_activism),
-            label: 'Donors',
-          ),
-        ],
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Admin Navigation',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.business),
+              title: const Text('View All Organizations'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>  ViewAllOrganizationsPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.local_offer),
+              title: const Text('Donations'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewAllDonationsPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.people),
+              title: const Text('Donors'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>  AdminViewDonors(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      body: const Center(
+        child: Text(
+          'Welcome to the Admin Dashboard',
+          style: TextStyle(fontSize: 24),
+        ),
       ),
     );
   }
