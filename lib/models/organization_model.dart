@@ -1,37 +1,38 @@
-import 'donation_drive_model.dart';
+import 'dart:convert';
+import 'dart:io';
 
 class Organization {
   String id;
   String name;
   String description;
-  List<DonationDrive> donationDrives;
+  List<String>? donations;
   bool status;
 
   Organization({
     required this.id,
     required this.name,
     required this.description,
-    required this.donationDrives,
+    required this.donations,
     required this.status,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'description': description,
-      'donationDrives': donationDrives.map((drive) => drive.toJson()).toList(),
+      'donations': donations,
       'status': status,
     };
   }
 
-  static Organization fromMap(Map<String, dynamic> map) {
+  static Organization fromJson(Map<String, dynamic> json) {
     return Organization(
-      id: map['id'],
-      name: map['name'],
-      description: map['description'],
-      donationDrives: List<DonationDrive>.from(map['donationDrives']?.map((drive) => DonationDrive.fromJson(drive)) ?? []),
-      status: map['status'],
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      donations: json['donations'] != null ? List<String>.from(json['donations']) : null,
+      status: json['status'],
     );
   }
 }

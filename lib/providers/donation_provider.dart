@@ -10,6 +10,7 @@ class DonationProvider with ChangeNotifier {
   // getter
   Stream<QuerySnapshot> get donationStream => _donationStream;
   
+  
   void fetchDonationsByUserID(String? uid) { //get the donations of a user based on their uid
     _donationStream = firebaseService.getAllDonationsByUserID(uid);
     notifyListeners();

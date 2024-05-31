@@ -8,7 +8,7 @@ class ViewAllDonationsPage extends StatelessWidget {
   final List<Donation> donations = [
     Donation(
       id: '1',
-      driveID: 'drive1',
+      orgID: 'drive1',
       userID: 'user1',
       food: true,
       clothes: false,
@@ -24,7 +24,7 @@ class ViewAllDonationsPage extends StatelessWidget {
     ),
     Donation(
       id: '2',
-      driveID: 'drive2',
+      orgID: 'drive2',
       userID: 'user2',
       food: false,
       clothes: true,
@@ -40,7 +40,7 @@ class ViewAllDonationsPage extends StatelessWidget {
     ),
     Donation(
       id: '3',
-      driveID: 'drive3',
+      orgID: 'drive3',
       userID: 'user3',
       food: true,
       clothes: true,

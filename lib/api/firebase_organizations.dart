@@ -1,39 +1,61 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/organization_model.dart';
 
-class OrganizationApi {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+class OrganizationAPI {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _collectionName = 'organizations';
 
-  Future<List<Organization>> fetchOrganizations() async {
+  Future<String?> addOrganization(Organization organization) async {
     try {
-      QuerySnapshot<Map<String, dynamic>> snapshot =
-          await _db.collection(_collectionName).get();
-      return snapshot.docs
-          .map((doc) => Organization.fromMap(doc.data()))
-          .toList();
-    } catch (error) {
-      throw error.toString();
+      await _firestore.collection(_collectionName).doc(organization.id).set(organization.toJson());
+      return 'Organization added successfully';
+    } catch (e) {
+      print('Error adding organization: $e');
+      return null;
     }
   }
 
-  Future<Organization> updateOrganization(Organization organization) async {
+  Future<Organization?> getOrganizationById(String id) async {
     try {
-      await _db
-          .collection(_collectionName)
-          .doc(organization.id)
-          .update(organization.toMap());
-      return organization;
-    } catch (error) {
-      throw error.toString();
+      DocumentSnapshot docSnapshot = await _firestore.collection(_collectionName).doc(id).get();
+      if (docSnapshot.exists) {
+        return Organization.fromJson(docSnapshot.data() as Map<String, dynamic>);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error getting organization by ID: $e');
+      return null;
     }
   }
 
-  Future<void> deleteOrganization(String id) async {
+  Future<List<Organization>> getAllOrganizations() async {
     try {
-      await _db.collection(_collectionName).doc(id).delete();
-    } catch (error) {
-      throw error.toString();
+      QuerySnapshot querySnapshot = await _firestore.collection(_collectionName).get();
+      return querySnapshot.docs.map((doc) => Organization.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    } catch (e) {
+      print('Error getting all organizations: $e');
+      return [];
+    }
+  }
+
+  Future<String?> updateOrganization(Organization organization) async {
+    try {
+      await _firestore.collection(_collectionName).doc(organization.id).update(organization.toJson());
+      return 'Organization updated successfully';
+    } catch (e) {
+      print('Error updating organization: $e');
+      return null;
+    }
+  }
+
+  Future<String?> deleteOrganization(String id) async {
+    try {
+      await _firestore.collection(_collectionName).doc(id).delete();
+      return 'Organization deleted successfully';
+    } catch (e) {
+      print('Error deleting organization: $e');
+      return null;
     }
   }
 }

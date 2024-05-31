@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/donation_model.dart';
 import '../providers/donation_provider.dart';
@@ -7,23 +8,33 @@ import '../providers/donation_provider.dart';
 class DonationListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: Provider.of<DonationProvider>(context),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Donation List"),
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      return Scaffold(
+        body: Center(
+          child: Text('User not logged in'),
         ),
-        body: DonationList(),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Donation List"),
       ),
+      body: DonationList(userID: currentUser.uid),
     );
   }
 }
 
 class DonationList extends StatelessWidget {
+  final String userID;
+
+  DonationList({required this.userID});
+
   @override
   Widget build(BuildContext context) {
     final donationProvider = Provider.of<DonationProvider>(context);
-    donationProvider.fetchDonationsByUserID("E2qk5ED1BgNC961QzMacveABN392"); // Replace with the appropriate user ID
+    donationProvider.fetchDonationsByUserID(userID);
 
     return StreamBuilder<QuerySnapshot>(
       stream: donationProvider.donationStream,
@@ -40,7 +51,7 @@ class DonationList extends StatelessWidget {
 
         var donations = snapshot.data!.docs.map((doc) {
           var data = doc.data() as Map<String, dynamic>;
-          data['id'] = doc.id; // Assign the document ID to the donation ID
+          data['id'] = doc.id;
           return Donation.fromJson(data);
         }).toList();
 
@@ -54,7 +65,6 @@ class DonationList extends StatelessWidget {
     );
   }
 }
-
 class DonationCard extends StatefulWidget {
   final Donation donation;
 
@@ -77,7 +87,6 @@ class _DonationCardState extends State<DonationCard> {
     setState(() {
       _selectedStatus = newStatus;
     });
-    // Update the status in the database
     Provider.of<DonationProvider>(context, listen: false)
         .updateDonationStatus(widget.donation.id!, newStatus);
   }
@@ -91,7 +100,6 @@ class _DonationCardState extends State<DonationCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Text('Donation ID: ${widget.donation.id ?? 'N/A'}', style: TextStyle(fontWeight: FontWeight.bold)),
             Text('Types: ${widget.donation.getDonationTypes(widget.donation)}'),
             Text('Delivery Method: ${widget.donation.deliveryMethod}'),
             Text('Weight: ${widget.donation.weight} kg'),
@@ -128,8 +136,8 @@ class _DonationCardState extends State<DonationCard> {
             if (widget.donation.image != null)
               Image.network(
                 widget.donation.image!,
-                width: double.infinity, // Adjust width as needed
-                height: 200, // Adjust height as needed
+                width: double.infinity,
+                height: 200,
                 fit: BoxFit.cover,
               ),
           ],

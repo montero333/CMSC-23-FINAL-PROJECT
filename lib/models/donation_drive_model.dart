@@ -14,7 +14,7 @@ class DonationDrive {
     required this.title,
     required this.description,
     this.proofPhotoUrl,
-    this.donationIds, String? imageUrl,
+    this.donationIds,
     required this.orgID
   });
 
