@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
 
-class ApprovalPage extends StatelessWidget {
+class ApprovalPage extends StatefulWidget {
+  @override
+  _ApprovalPageState createState() => _ApprovalPageState();
+}
+
+class _ApprovalPageState extends State<ApprovalPage> {
   // Dummy list of organizations for demonstration
-  final List<String> organizations = [
+  List<String> organizations = [
     'Organization 1',
     'Organization 2',
     'Organization 3',
     'Organization 4',
     'Organization 5',
   ];
+
+  // Function to add organization when accepted
+  void _acceptOrganization(String organizationName) {
+    // Add organization to your organization provider here
+    // For demonstration, I'm just printing the accepted organization
+    print('Accepted: $organizationName');
+    // Assuming your organization provider has a method to add organizations
+    // organizationProvider.addOrganization(organizationName);
+
+    // You can remove the accepted organization from the list
+    setState(() {
+      organizations.remove(organizationName);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +46,7 @@ class ApprovalPage extends StatelessWidget {
                       IconButton(
                         icon: Icon(Icons.check), // Accept icon
                         onPressed: () {
-                          // Handle accept action
-                          print('Accepted: ${organizations[index]}');
+                          _acceptOrganization(organizations[index]);
                         },
                       ),
                       IconButton(
@@ -36,6 +54,7 @@ class ApprovalPage extends StatelessWidget {
                         onPressed: () {
                           // Handle reject action
                           print('Rejected: ${organizations[index]}');
+                          // You can handle rejection if needed
                         },
                       ),
                     ],
