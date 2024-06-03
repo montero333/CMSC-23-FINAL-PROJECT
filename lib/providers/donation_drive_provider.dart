@@ -1,43 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'dart:io';
 import '../models/donation_drive_model.dart';
 import '../api/firebase_drive_donation_api.dart';
 
 class DonationDriveProvider with ChangeNotifier {
-  final FirestoreService _firestoreService = FirestoreService();
-  late final Stream<List<DonationDrive>> _donationDriveStream = _firestoreService.streamDonationDrives(); // Initialize the stream
-  List<DonationDrive> _donationDrives = [];
+  final FirebaseDonationDriveAPI _firestoreService = FirebaseDonationDriveAPI();
+  late Stream<QuerySnapshot> _donationDrives;
 
-  List<DonationDrive> get donationDrives => _donationDrives;
-  Stream<List<DonationDrive>> get donationDriveStream => _donationDriveStream;
+  Stream<QuerySnapshot> get donationDrives => _donationDrives;
 
-  Future<void> fetchDonationDrives() async {
-    _donationDrives = await _firestoreService.getDonationDrives();
+  void fetchDonationDrives(String? orgID) {
+    _donationDrives = _firestoreService.getDonationDrivesByOrgID(orgID);
     notifyListeners();
   }
 
   Future<void> addDonationDrive(DonationDrive donationDrive) async {
-    await _firestoreService.createDonationDrive(donationDrive);
-    _donationDrives.add(donationDrive);
+    await _firestoreService.addDonationDrive(donationDrive.toJson(donationDrive));
     notifyListeners();
   }
 
-  Future<void> updateDonationDrive(DonationDrive donationDrive) async {
-    await _firestoreService.updateDonationDrive(donationDrive);
-    final index = _donationDrives.indexWhere((dd) => dd.id == donationDrive.id);
-    if (index != -1) {
-      _donationDrives[index] = donationDrive;
-      notifyListeners();
-    }
-  }
 
-  Future<void> removeDonationDrive(String id) async {
-    await _firestoreService.deleteDonationDrive(id);
-    _donationDrives.removeWhere((dd) => dd.id == id);
-    notifyListeners();
-  }
+  // Future<void> removeDonationDrive(String id) async {
+  //   await _firestoreService.deleteDonationDrive(id);
+  //   _donationDrives.removeWhere((dd) => dd.id == id);
+  //   notifyListeners();
+  // }
 
   // Future<void> addDonationToDrive(String driveId, String donationId) async {
   //   await _firestoreService.addDonationToDrive(driveId, donationId);

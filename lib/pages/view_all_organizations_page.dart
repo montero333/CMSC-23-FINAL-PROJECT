@@ -65,13 +65,6 @@ class _ViewAllOrganizationsPageState extends State<ViewAllOrganizationsPage> {
                 title: Text(org['organizationName'] ?? 'Unnamed Organization'),
                 subtitle: Text(org['email']),
                 onTap: () {
-                  context.read<OrganizationProvider>().addOrganization(
-                      Organization(
-                          id: organizations[index].id,
-                          name: organizations[index]["organizationName"],
-                          description: organizations[index]["email"],
-                          donations: [],
-                          status: true));
                   Navigator.push(
                     context,
                     MaterialPageRoute(

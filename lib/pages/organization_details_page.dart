@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+
+import '../models/organization_model.dart';
+import '../providers/organizations_provider.dart';
 
 class OrganizationDetailsPage extends StatelessWidget {
   final QueryDocumentSnapshot organization;
@@ -52,6 +56,15 @@ class OrganizationDetailsPage extends StatelessWidget {
                   : ElevatedButton(
                       onPressed: () async {
                         await approveOrganization();
+                        Organization org = Organization.fromJson(
+                          {
+                            'id' : organization['id'],
+                            'name': organization['organizationName'],
+                            'description': null,
+                            'status': true,
+                          }
+                        );
+                        context.read<OrganizationProvider>().addOrganization(org);
                         Navigator.pop(context);
                       },
                       child: Text('Approve'),

@@ -33,19 +33,19 @@ class _CreateDonationDriveFormState extends State<CreateDonationDriveForm> {
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      if (_selectedDonationIds.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please select at least one donation')),
-        );
-        return;
-      }
+      // if (_selectedDonationIds.isEmpty) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(content: Text('Please select at least one donation')),
+      //   );
+      //   return;
+      // }
 
-      if (imageUrl == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please pick an image')),
-        );
-        return;
-      }
+      // if (imageUrl == null) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(content: Text('Please pick an image')),
+      //   );
+      //   return;
+      // }
 
       final donationDriveProvider = Provider.of<DonationDriveProvider>(context, listen: false);
       final credProvider = Provider.of<CredProvider>(context, listen: false);

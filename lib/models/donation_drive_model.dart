@@ -1,14 +1,14 @@
 // lib/models/donation_drive.dart
 
 class DonationDrive {
-  String id;
+  String? id;
   String title;
   String description;
   String? proofPhotoUrl;
-  String orgID;
+  String orgID; //kaninong org ito
 
   DonationDrive({
-    required this.id,
+    this.id,
     required this.title,
     required this.description,
     this.proofPhotoUrl,
@@ -16,13 +16,12 @@ class DonationDrive {
   });
 
   // Convert a DonationDrive object to a JSON map
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(DonationDrive donationDrive) {
     return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'imageUrls': proofPhotoUrl,// Added donationIds
-      'orgID':orgID
+      'title': donationDrive.title,
+      'description': donationDrive.description,
+      'imageUrls': donationDrive.proofPhotoUrl,
+      'orgID': donationDrive.orgID
     };
   }
 

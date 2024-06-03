@@ -1,105 +1,101 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../models/donation_drive_model.dart';
 import '../providers/donation_drive_provider.dart';
-import 'drive_form.dart';
-import 'edit_donation_drive.dart';
+import '../pages/donateTo_OrganizationPage.dart';
+import 'package:provider/provider.dart';
+import '../models/donation_drive_model.dart';
+import '../models/organization_model.dart';
+import '../providers/auth_provider.dart';
+import '../providers/organizations_provider.dart';
+import 'OrganizationInfoPage.dart';
 
-class DonationDrivesPage extends StatelessWidget {
+class DonationDriveList extends StatefulWidget {
+  // final List<DonationDrive> donationDrives;
+  final String? organizationID;
+
+  const DonationDriveList({super.key, required this.organizationID});
+
+  _DonationDriveListState createState() => _DonationDriveListState();
+}
+
+class _DonationDriveListState extends State<DonationDriveList> {
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.organizationID != null) {
+      context.read<DonationDriveProvider>().fetchDonationDrives(widget.organizationID);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
-      // Handle case where user is not logged in
+
+    // if (widget.organizationID != null) {
+    // context.watch<DonationDriveProvider>().fetchDonationDrives("qOeJC0zYiEWpAoe9uclC");
+    Stream<QuerySnapshot> donationDrives = context.watch<DonationDriveProvider>().donationDrives;
       return Scaffold(
-        body: Center(
-          child: Text('User not logged in'),
+        appBar: AppBar(
+          title: Text("List of Donation Drives"),
+          backgroundColor: Colors.green,
         ),
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Donation Drives'),
-      ),
-      body: StreamBuilder<List<DonationDrive>>(
-        stream: Provider.of<DonationDriveProvider>(context).donationDriveStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Text('No donation drives found.'),
-            );
-          } else {
-            final donationDrives = snapshot.data!;
-            final currentUserOrgID = currentUser.uid;
-
-            final orgDonationDrives = donationDrives.where((drive) => drive.orgID == currentUserOrgID).toList();
+        body: StreamBuilder(
+          stream: donationDrives, 
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text("Error encountered! ${snapshot.error}"),
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return const Center(
+                child: Text("No Todos Found"),
+              );
+            }
 
             return ListView.builder(
-              itemCount: orgDonationDrives.length,
+              itemCount: snapshot.data?.docs.length,
               itemBuilder: (context, index) {
-                DonationDrive donationDrive = orgDonationDrives[index];
-                return DonationDriveCard(
-                  donationDrive: donationDrive,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditDonationDriveForm(donationDrive: donationDrive),
-                      ),
-                    );
-                    print('Clicked on ${donationDrive.title}');
-                  },
+                DonationDrive donationDrive = DonationDrive.fromJson(
+                  snapshot.data?.docs[index].data() as Map<String, dynamic>
+                );
+                return GestureDetector(
+                onTap: () => {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => DonateToOrganizationDrive(donationDrive: donationDrive, userID: context.watch<MyAuthProvider>().userID),))
+                },
+                child: DonationDriveCard(donationDrive: donationDrive)
                 );
               },
             );
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CreateDonationDriveForm()),
-          );
-        },
-        child: Icon(Icons.add),
-      ),
-    );
+          },
+        )
+      );
   }
 }
 
+
 class DonationDriveCard extends StatelessWidget {
   final DonationDrive donationDrive;
-  final VoidCallback onTap;
 
-  DonationDriveCard({required this.donationDrive, required this.onTap});
+  const DonationDriveCard({super.key, required this.donationDrive});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        margin: EdgeInsets.all(10),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Title: ${donationDrive.title}', style: TextStyle(fontWeight: FontWeight.bold)),
-              Text('Description: ${donationDrive.description}'),
-              SizedBox(height: 10),
-            ],
-          ),
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Text(
+              donationDrive.title,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8.0),
+            Text(donationDrive.description),
+          ],
         ),
       ),
     );

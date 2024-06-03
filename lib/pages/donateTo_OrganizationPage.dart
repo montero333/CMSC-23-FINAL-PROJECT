@@ -111,7 +111,7 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                   ),
                 );
                 Donation donation = Donation(
-                  orgID: widget.donationDrive.id, 
+                  orgID: widget.donationDrive.orgID, 
                   userID: widget.userID,
                   food: donationFormInput["food"],
                   clothes: donationFormInput["clothes"],
@@ -481,7 +481,7 @@ class _DatePickerState extends State<DatePicker> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2015, 8),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
     if (picked != null && picked != selectedDate) {
