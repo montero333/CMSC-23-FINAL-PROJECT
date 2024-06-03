@@ -8,31 +8,31 @@ import '../models/organization_model.dart';
 import '../providers/auth_provider.dart';
 import '../providers/organizations_provider.dart';
 import 'OrganizationInfoPage.dart';
+import 'donation_drive_card.dart';
 
 class DonationDriveList extends StatefulWidget {
   // final List<DonationDrive> donationDrives;
-  final String? organizationID;
+  final String? organizationUserID;
 
-  const DonationDriveList({super.key, required this.organizationID});
+  const DonationDriveList({super.key, required this.organizationUserID});
 
   _DonationDriveListState createState() => _DonationDriveListState();
 }
 
 class _DonationDriveListState extends State<DonationDriveList> {
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.organizationID != null) {
-      context.read<DonationDriveProvider>().fetchDonationDrives(widget.organizationID);
-    }
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   if (widget.organizationUserID != null) {
+  //     print(widget.organizationUserID);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
 
-    // if (widget.organizationID != null) {
-    // context.watch<DonationDriveProvider>().fetchDonationDrives("qOeJC0zYiEWpAoe9uclC");
+    context.read<DonationDriveProvider>().fetchDonationDrives(widget.organizationUserID);
     Stream<QuerySnapshot> donationDrives = context.watch<DonationDriveProvider>().donationDrives;
       return Scaffold(
         appBar: AppBar(
@@ -52,7 +52,7 @@ class _DonationDriveListState extends State<DonationDriveList> {
               );
             } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
               return const Center(
-                child: Text("No Todos Found"),
+                child: Text("No Donation Drives Found"),
               );
             }
 
@@ -73,31 +73,5 @@ class _DonationDriveListState extends State<DonationDriveList> {
           },
         )
       );
-  }
-}
-
-
-class DonationDriveCard extends StatelessWidget {
-  final DonationDrive donationDrive;
-
-  const DonationDriveCard({super.key, required this.donationDrive});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(
-              donationDrive.title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8.0),
-            Text(donationDrive.description),
-          ],
-        ),
-      ),
-    );
   }
 }

@@ -58,6 +58,7 @@ class OrganizationDetailsPage extends StatelessWidget {
                         await approveOrganization();
                         Organization org = Organization.fromJson(
                           {
+                            'userId': organization['userId'],
                             'id' : organization['id'],
                             'name': organization['organizationName'],
                             'description': null,

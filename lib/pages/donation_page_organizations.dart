@@ -62,7 +62,7 @@ class _DonationOrganizationsListState extends State<DonationOrganizationsList> {
                 organization.id = snapshot.data?.docs[index].id;
                 return GestureDetector(
                   onTap: () => {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => DonationDriveList(organizationID: organization.id,),))
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => DonationDriveList(organizationUserID: organization.userId,),))
                   },
                   child: OrganizationCard(organization: organization)
                 );
@@ -100,7 +100,7 @@ class OrganizationCard extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8.0),
-            Text(organization.description ??  "No Org"),
+            Text(organization.description ??  "No Description"),
           ],
         ),
       ),
