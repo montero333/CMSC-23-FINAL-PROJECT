@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:montero_cmsc23/models/organization_model.dart';
+import 'package:montero_cmsc23/providers/organizations_provider.dart';
+import 'package:provider/provider.dart';
 import '../api/firebase_credential_api.dart';
 import 'organization_details_page.dart';
 
 class ViewAllOrganizationsPage extends StatefulWidget {
   @override
-  _ViewAllOrganizationsPageState createState() => _ViewAllOrganizationsPageState();
+  _ViewAllOrganizationsPageState createState() =>
+      _ViewAllOrganizationsPageState();
 }
 
 class _ViewAllOrganizationsPageState extends State<ViewAllOrganizationsPage> {
   final FirebaseCredAPI _firebaseCredAPI = FirebaseCredAPI();
-  bool _showOnlyNotApproved = false;
+  bool _showOnlyNotApproved = true;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +23,8 @@ class _ViewAllOrganizationsPageState extends State<ViewAllOrganizationsPage> {
         title: Text('All Organizations'),
         actions: [
           IconButton(
-            icon: Icon(_showOnlyNotApproved ? Icons.filter_alt_off : Icons.filter_alt),
+            icon: Icon(
+                _showOnlyNotApproved ? Icons.filter_alt_off : Icons.filter_alt),
             onPressed: () {
               setState(() {
                 _showOnlyNotApproved = !_showOnlyNotApproved;
@@ -60,6 +65,13 @@ class _ViewAllOrganizationsPageState extends State<ViewAllOrganizationsPage> {
                 title: Text(org['organizationName'] ?? 'Unnamed Organization'),
                 subtitle: Text(org['email']),
                 onTap: () {
+                  context.read<OrganizationProvider>().addOrganization(
+                      Organization(
+                          id: organizations[index].id,
+                          name: organizations[index]["organizationName"],
+                          description: organizations[index]["email"],
+                          donations: [],
+                          status: true));
                   Navigator.push(
                     context,
                     MaterialPageRoute(
