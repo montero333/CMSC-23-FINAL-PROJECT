@@ -1,6 +1,7 @@
 class Donation {
   String? id;
   String? orgID; //para saang donation drive yung donation
+  String? driveID;
   String? userID; //sinong user nag donate
   bool food;
   bool clothes;

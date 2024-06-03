@@ -57,7 +57,6 @@ class _CreateDonationDriveFormState extends State<CreateDonationDriveForm> {
         id: FirebaseFirestore.instance.collection('donation_drives').doc().id,
         title: _titleController.text,
         description: _descriptionController.text,
-        donationIds: _selectedDonationIds,
         proofPhotoUrl: ImageConstants().convertToBase64(imageUrl),
         orgID: orgID!,
       );

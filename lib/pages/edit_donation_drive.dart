@@ -88,7 +88,7 @@ class _EditDonationDriveFormState extends State<EditDonationDriveForm> {
                   id: widget.donationDrive.id,
                   title: _titleController.text,
                   description: _descriptionController.text,
-                  donationIds: _existingDonationIds,
+                  // donationIds: _existingDonationIds,
                   orgID: orgID!, // Use the CredProvider instance to get the current user's ID
                 );
                 await Provider.of<DonationDriveProvider>(context, listen: false).updateDonationDrive(updatedDonationDrive);

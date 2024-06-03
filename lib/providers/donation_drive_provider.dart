@@ -39,21 +39,21 @@ class DonationDriveProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addDonationToDrive(String driveId, String donationId) async {
-    await _firestoreService.addDonationToDrive(driveId, donationId);
-    final index = _donationDrives.indexWhere((dd) => dd.id == driveId);
-    if (index != -1 && !_donationDrives[index].donationIds!.contains(donationId)) {
-      _donationDrives[index].donationIds!.add(donationId);
-      notifyListeners();
-    }
-  }
+  // Future<void> addDonationToDrive(String driveId, String donationId) async {
+  //   await _firestoreService.addDonationToDrive(driveId, donationId);
+  //   final index = _donationDrives.indexWhere((dd) => dd.id == driveId);
+  //   if (index != -1 && !_donationDrives[index].donationIds!.contains(donationId)) {
+  //     _donationDrives[index].donationIds!.add(donationId);
+  //     notifyListeners();
+  //   }
+  // }
 
-  Future<void> removeDonationFromDrive(String driveId, String donationId) async {
-    await _firestoreService.removeDonationFromDrive(driveId, donationId);
-    final index = _donationDrives.indexWhere((dd) => dd.id == driveId);
-    if (index != -1) {
-      _donationDrives[index].donationIds!.remove(donationId);
-      notifyListeners();
-    }
-  }
+  // Future<void> removeDonationFromDrive(String driveId, String donationId) async {
+  //   await _firestoreService.removeDonationFromDrive(driveId, donationId);
+  //   final index = _donationDrives.indexWhere((dd) => dd.id == driveId);
+  //   if (index != -1) {
+  //     _donationDrives[index].donationIds!.remove(donationId);
+  //     notifyListeners();
+  //   }
+  // }
 }
