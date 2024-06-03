@@ -9,48 +9,51 @@ import '../providers/donation_provider.dart';
 class DonationListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    context.watch<DonationProvider>().fetchDonationsByOrgID(context.watch<MyAuthProvider>().userID);
-    Stream<QuerySnapshot> donations = context.watch<DonationProvider>().donationStream;
+    context
+        .watch<DonationProvider>()
+        .fetchDonationsByOrgID(context.watch<MyAuthProvider>().userID);
+    Stream<QuerySnapshot> donations =
+        context.watch<DonationProvider>().donationStream;
 
     return Scaffold(
       appBar: AppBar(
         title: Text("List of Donations"),
       ),
       body: StreamBuilder(
-        stream: donations, 
+        stream: donations,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-              return Center(
-                child: Text("Error encountered! ${snapshot.error}"),
-              );
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(
-                child: Text("No Donations Found"),
-              );
-            }
-
-            return ListView.builder(
-              itemCount: snapshot.data?.docs.length,
-              itemBuilder: (context, index) {
-                Donation donation = Donation.fromJson(
-                  snapshot.data?.docs[index].data() as Map<String, dynamic>
-                );
-                return GestureDetector(
-                onTap: () => {
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => DonateToOrganizationDrive(donationDrive: donationDrive, userID: context.watch<MyAuthProvider>().userID),))
-                },
-                child: OrganizationDonationCard(donation: donation)
-                );
-              },
+            return Center(
+              child: Text("Error encountered! ${snapshot.error}"),
             );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text("No Donations Found"),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: snapshot.data?.docs.length,
+            itemBuilder: (context, index) {
+              Map<String, dynamic> docMap =
+                  snapshot.data?.docs[index].data() as Map<String, dynamic>;
+              docMap["id"] = snapshot.data?.docs[index].id;
+              Donation donation = Donation.fromJson(docMap);
+              return GestureDetector(
+                  onTap: () => {
+                        print(donation.id)
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => DonateToOrganizationDrive(donationDrive: donationDrive, userID: context.watch<MyAuthProvider>().userID),))
+                      },
+                  child: OrganizationDonationCard(donation: donation));
+            },
+          );
         },
       ),
     );
-   
   }
 }
 
@@ -60,7 +63,8 @@ class OrganizationDonationCard extends StatefulWidget {
   OrganizationDonationCard({required this.donation});
 
   @override
-  _OrganizationDonationCardState createState() => _OrganizationDonationCardState();
+  _OrganizationDonationCardState createState() =>
+      _OrganizationDonationCardState();
 }
 
 class _OrganizationDonationCardState extends State<OrganizationDonationCard> {
