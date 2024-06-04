@@ -61,9 +61,11 @@ class _DonationDriveListState extends State<DonationDriveList> {
               child: ListView.builder(
                 itemCount: snapshot.data?.docs.length,
                 itemBuilder: (context, index) {
-                  DonationDrive donationDrive = DonationDrive.fromJson(
-                      snapshot.data?.docs[index].data()
-                          as Map<String, dynamic>);
+                  Map<String, dynamic> docMap =
+                      snapshot.data?.docs[index].data() as Map<String, dynamic>;
+                  docMap["id"] = snapshot.data?.docs[index].id;
+                  DonationDrive donationDrive = DonationDrive.fromJson(docMap);
+                  ;
                   return GestureDetector(
                       onTap: () => {
                             Navigator.push(
