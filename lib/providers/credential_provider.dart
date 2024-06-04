@@ -22,8 +22,8 @@ class CredProvider with ChangeNotifier {
   String? proofs;
 
   String get getEmail => email;
-  String get getFirst => firstName; 
-  String get getLast => lastName; 
+  String get getFirst => firstName;
+  String get getLast => lastName;
   String get currentID => _currentId;
   String get getPassword => passWord;
 
@@ -53,11 +53,10 @@ class CredProvider with ChangeNotifier {
       return null;
     }
   }
-  
+
   void changeId(String a) {
     _currentId = a;
   }
-
 
   Stream<QuerySnapshot> get users => _userStream;
 
@@ -67,8 +66,6 @@ class CredProvider with ChangeNotifier {
   }
 
   void addUser(Credential c) async {
-
-
     email = c.email;
     firstName = c.firstName;
     lastName = c.lastName;
@@ -78,15 +75,14 @@ class CredProvider with ChangeNotifier {
     userRole = c.userRole;
     organizationName = c.organizationName;
     proofs = c.proofs;
-    
+
     String message = await firebaseService.addUser(c.toJson());
-    
-    
+
     print(message);
     notifyListeners();
   }
 
-   Future<String?> getUserRoleByEmail(String email) async {
+  Future<String?> getUserRoleByEmail(String email) async {
     try {
       DocumentSnapshot userDoc = await firebaseService.getUserByEmail(email);
       userRole = userDoc['userRole'];
@@ -98,13 +94,10 @@ class CredProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String,dynamic>?> getUserByID(String? userID) async {
+  Future<Map<String, dynamic>?> getUserByID(String? userID) async {
     try {
       DocumentSnapshot userDoc = await firebaseService.getUserByUserID(userID);
-      return {
-        "firstName" : userDoc['firstName'],
-        "lastName" : userDoc['lastName']
-      };
+      return userDoc.data() as Map<String, dynamic>;
     } catch (e) {
       print(e);
       return null;
@@ -112,19 +105,15 @@ class CredProvider with ChangeNotifier {
   }
 
   Future<bool> isOrganizationApproved(String email) async {
-  try {
-    DocumentSnapshot userDoc = await firebaseService.getUserByEmail(email);
-    String? userRole = userDoc['userRole'];
-    bool isApproved = userDoc['isApproved'] ?? false;
+    try {
+      DocumentSnapshot userDoc = await firebaseService.getUserByEmail(email);
+      String? userRole = userDoc['userRole'];
+      bool isApproved = userDoc['isApproved'] ?? false;
 
-    return userRole == 'Organization' && isApproved;
-  } catch (e) {
-    print('Error checking organization approval: $e');
-    return false;
+      return userRole == 'Organization' && isApproved;
+    } catch (e) {
+      print('Error checking organization approval: $e');
+      return false;
+    }
   }
-}
-
-
-  
-
 }

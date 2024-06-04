@@ -10,7 +10,8 @@ import '../providers/organizations_provider.dart';
 class DonationOrganizationsList extends StatefulWidget {
   const DonationOrganizationsList({super.key});
 
-  _DonationOrganizationsListState createState() => _DonationOrganizationsListState();
+  _DonationOrganizationsListState createState() =>
+      _DonationOrganizationsListState();
 }
 
 class _DonationOrganizationsListState extends State<DonationOrganizationsList> {
@@ -18,60 +19,69 @@ class _DonationOrganizationsListState extends State<DonationOrganizationsList> {
 
   @override
   Widget build(BuildContext context) {
-    Stream<QuerySnapshot> organizations = context.watch<OrganizationProvider>().organizations;
+    Stream<QuerySnapshot> organizations =
+        context.watch<OrganizationProvider>().organizations;
 
     return Scaffold(
-      drawer: AppDrawer() ,
+      drawer: AppDrawer(),
       appBar: AppBar(
         title: Text("List of Organizations"),
         backgroundColor: Colors.green,
       ),
       body: StreamBuilder(
-          stream: organizations, 
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text("Error encountered! ${snapshot.error}"),
-              );
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (!snapshot.hasData) {
-              return const Row(
-                mainAxisAlignment: MainAxisAlignment.center, //return no friends message
-                children: [
-                  Text(
-                    "No friends ",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                    ),
+        stream: organizations,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("Error encountered! ${snapshot.error}"),
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (!snapshot.hasData) {
+            return const Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //return no friends message
+              children: [
+                Text(
+                  "No friends ",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
                   ),
-                  Icon(Icons.sentiment_dissatisfied_rounded ,color: Colors.white,),
-                ],
-              );
-            }
-      
-            return ListView.builder(
+                ),
+                Icon(
+                  Icons.sentiment_dissatisfied_rounded,
+                  color: Colors.white,
+                ),
+              ],
+            );
+          }
+
+          return Expanded(
+            child: ListView.builder(
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (context, index) {
                 Organization organization = Organization.fromJson(
-                  snapshot.data?.docs[index].data() as Map<String, dynamic>
-                );
+                    snapshot.data?.docs[index].data() as Map<String, dynamic>);
                 organization.id = snapshot.data?.docs[index].id;
                 return GestureDetector(
-                  onTap: () => {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => DonationDriveList(organizationUserID: organization.userId,),))
-                  },
-                  child: OrganizationCard(organization: organization)
-                );
+                    onTap: () => {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DonationDriveList(
+                                  organizationUserID: organization.userId,
+                                ),
+                              ))
+                        },
+                    child: OrganizationCard(organization: organization));
               },
-            );
-      
-      
-          },
-        ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -100,7 +110,7 @@ class OrganizationCard extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8.0),
-            Text(organization.description ??  "No Description"),
+            Text(organization.description ?? "No Description"),
           ],
         ),
       ),

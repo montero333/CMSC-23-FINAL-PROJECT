@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:montero_cmsc23/api/firebase_credential_api.dart';
 import 'package:montero_cmsc23/pages/organization_drive_list.dart';
 import 'package:montero_cmsc23/pages/organization_profile_page.dart';
+import 'package:montero_cmsc23/providers/auth_provider.dart';
+import 'package:montero_cmsc23/providers/credential_provider.dart';
+import 'package:montero_cmsc23/providers/donation_provider.dart';
+import 'package:provider/provider.dart';
 import 'donation_drive_list ni gabe.dart';
 import 'organization_donations_page.dart';
-
 
 class OrganizationMainPage extends StatefulWidget {
   @override
@@ -33,7 +38,7 @@ class _OrganizationMainPageState extends State<OrganizationMainPage> {
         selectedItemColor: Colors.purple, // Set selected item color to purple
         unselectedItemColor: Colors.grey, // Set unselected item color to grey
         showUnselectedLabels: true, // Show labels for all items
-        onTap: (index) {
+        onTap: (index) async {
           setState(() {
             _currentIndex = index;
           });

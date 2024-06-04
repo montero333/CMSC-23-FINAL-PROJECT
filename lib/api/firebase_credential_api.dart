@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 
 class FirebaseCredAPI {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
-  final CollectionReference usersCollection = FirebaseFirestore.instance.collection('CredentialInfo');
+  final CollectionReference usersCollection =
+      FirebaseFirestore.instance.collection('CredentialInfo');
 
   Future<DocumentSnapshot> getUserByEmail(String email) async {
-    QuerySnapshot querySnapshot = await usersCollection.where('email', isEqualTo: email).limit(1).get();
+    QuerySnapshot querySnapshot =
+        await usersCollection.where('email', isEqualTo: email).limit(1).get();
     if (querySnapshot.docs.isNotEmpty) {
       return querySnapshot.docs.first;
     } else {
@@ -20,7 +22,8 @@ class FirebaseCredAPI {
 
   //method to get user by ID
   Future<DocumentSnapshot> getUserByUserID(String? userId) async {
-    QuerySnapshot querySnapshot = await usersCollection.where('userId', isEqualTo: userId).limit(1).get();
+    QuerySnapshot querySnapshot =
+        await usersCollection.where('userId', isEqualTo: userId).limit(1).get();
     if (querySnapshot.docs.isNotEmpty) {
       return querySnapshot.docs.first;
     } else {
@@ -28,6 +31,16 @@ class FirebaseCredAPI {
     }
   }
 
+  //method to get user by ID
+  Future<DocumentSnapshot> getUserByUID(String? uid) async {
+    QuerySnapshot querySnapshot =
+        await usersCollection.where('id', isEqualTo: uid).limit(1).get();
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs.first;
+    } else {
+      throw Exception('User not found');
+    }
+  }
 
   Future<String> addUser(Map<String, dynamic> user) async {
     // Check if the email already exists
@@ -38,7 +51,10 @@ class FirebaseCredAPI {
 
     try {
       final docRef = await db.collection("CredentialInfo").add(user);
-      await db.collection("CredentialInfo").doc(docRef.id).update({'id': docRef.id});
+      await db
+          .collection("CredentialInfo")
+          .doc(docRef.id)
+          .update({'id': docRef.id});
 
       return "Successfully added user!";
     } on FirebaseException catch (e) {
@@ -90,7 +106,8 @@ class FirebaseCredAPI {
     if (image != null) {
       try {
         // Upload the selected image to Firebase Storage
-        firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+        firebase_storage.Reference ref = firebase_storage
+            .FirebaseStorage.instance
             .ref()
             .child('proofs')
             .child('proof_${DateTime.now().millisecondsSinceEpoch}.jpg');
@@ -135,6 +152,4 @@ class FirebaseCredAPI {
       fontSize: 16.0,
     );
   }
-
-  
 }
