@@ -18,12 +18,24 @@ class DonationDriveCard extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(
-              donationDrive.title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      donationDrive.title,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8.0),
+                    Text(donationDrive.description),
+                  ],
+                ),
+                Icon(Icons.add)
+              ],
             ),
-            SizedBox(height: 8.0),
-            Text(donationDrive.description),
             StreamBuilder(
                 stream: FirebaseDonationsAPI()
                     .getAllDonationsByDriveID(donationDrive.id),
@@ -44,7 +56,7 @@ class DonationDriveCard extends StatelessWidget {
                   }
 
                   return SizedBox(
-                    height: 200,
+                    height: 250,
                     child: ListView.builder(
                       itemCount: snapshot.data?.docs.length,
                       itemBuilder: (context, index) {

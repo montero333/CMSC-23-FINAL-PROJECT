@@ -20,7 +20,6 @@ class DonationDriveList extends StatefulWidget {
 }
 
 class _DonationDriveListState extends State<DonationDriveList> {
-
   // @override
   // void initState() {
   //   super.initState();
@@ -31,16 +30,18 @@ class _DonationDriveListState extends State<DonationDriveList> {
 
   @override
   Widget build(BuildContext context) {
-
-    context.read<DonationDriveProvider>().fetchDonationDrives(widget.organizationUserID);
-    Stream<QuerySnapshot> donationDrives = context.watch<DonationDriveProvider>().donationDrives;
-      return Scaffold(
+    context
+        .read<DonationDriveProvider>()
+        .fetchDonationDrives(widget.organizationUserID);
+    Stream<QuerySnapshot> donationDrives =
+        context.watch<DonationDriveProvider>().donationDrives;
+    return Scaffold(
         appBar: AppBar(
           title: Text("List of Donation Drives"),
           backgroundColor: Colors.green,
         ),
         body: StreamBuilder(
-          stream: donationDrives, 
+          stream: donationDrives,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(
@@ -56,22 +57,31 @@ class _DonationDriveListState extends State<DonationDriveList> {
               );
             }
 
-            return ListView.builder(
-              itemCount: snapshot.data?.docs.length,
-              itemBuilder: (context, index) {
-                DonationDrive donationDrive = DonationDrive.fromJson(
-                  snapshot.data?.docs[index].data() as Map<String, dynamic>
-                );
-                return GestureDetector(
-                onTap: () => {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => DonateToOrganizationDrive(donationDrive: donationDrive, userID: context.watch<MyAuthProvider>().userID),))
+            return Expanded(
+              child: ListView.builder(
+                itemCount: snapshot.data?.docs.length,
+                itemBuilder: (context, index) {
+                  DonationDrive donationDrive = DonationDrive.fromJson(
+                      snapshot.data?.docs[index].data()
+                          as Map<String, dynamic>);
+                  return GestureDetector(
+                      onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DonateToOrganizationDrive(
+                                          donationDrive: donationDrive,
+                                          userID: context
+                                              .watch<MyAuthProvider>()
+                                              .userID),
+                                ))
+                          },
+                      child: DonationDriveCard(donationDrive: donationDrive));
                 },
-                child: DonationDriveCard(donationDrive: donationDrive)
-                );
-              },
+              ),
             );
           },
-        )
-      );
+        ));
   }
 }
