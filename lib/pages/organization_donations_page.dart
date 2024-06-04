@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/donation_model.dart';
 import '../providers/auth_provider.dart';
+import '../providers/credential_provider.dart';
 import '../providers/donation_provider.dart';
 
 class DonationListPage extends StatelessWidget {
@@ -14,6 +15,7 @@ class DonationListPage extends StatelessWidget {
         .fetchDonationsByOrgID(context.watch<MyAuthProvider>().userID);
     Stream<QuerySnapshot> donations =
         context.watch<DonationProvider>().donationStream;
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -86,13 +88,29 @@ class _OrganizationDonationCardState extends State<OrganizationDonationCard> {
 
   @override
   Widget build(BuildContext context) {
+    
+
     return Card(
       margin: EdgeInsets.all(10),
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: [FutureBuilder<Map<String, dynamic>?>(
+                  future: context.read<CredProvider>().getUserByID(widget.donation.userID),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else if (!snapshot.hasData || snapshot.data == null) {
+                      return Text("User not found");
+                    } else {
+                      Map<String, dynamic>? userData = snapshot.data;
+                      return Text("${userData!['firstName']} ${userData['lastName']}");
+                    }
+                  },
+                ),
             Text('Types: ${widget.donation.getDonationTypes(widget.donation)}'),
             Text('Delivery Method: ${widget.donation.deliveryMethod}'),
             Text('Weight: ${widget.donation.weight} kg'),

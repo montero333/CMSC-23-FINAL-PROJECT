@@ -57,9 +57,13 @@ class _QRViewExampleState extends State<QRViewExample> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
+      if(result == null){
+
+        setState(() {
+          result = scanData;
+        });
+        Navigator.pop(context);
+      }
     });
   }
 
