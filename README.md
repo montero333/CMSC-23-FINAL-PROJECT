@@ -1,16 +1,18 @@
-# montero_cmsc23
+@Montero, Nico Antontio
+@Santos, Jose Gabriel
+@Zamora, Aaron
 
-A new Flutter project.
+This app is a donation system app where Donations can be sent to different organizations and where organizations can place these donations into different donation drives.
 
-## Getting Started
+@HOW-TO-USE
 
-This project is a starting point for a Flutter application.
+1. Create an account as a donor/organization (organization needs admin approval)
+2. Login as donor
+3. Select existing organizations
+4. Donate to selected organization by filling up the following information
+5. Can edit personal details
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+6. Login as organization
+7. Can you view all existing donations for your organization
+8. Can add, deletem edit donation drives based on current donations
+9. Can edit organization details
