@@ -30,7 +30,9 @@ class DonationDriveCard extends StatelessWidget {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 8.0),
-                    Text(donationDrive.description),
+                    SizedBox(
+                        width: MediaQuery.sizeOf(context).width - 100,
+                        child: Text(donationDrive.description)),
                   ],
                 ),
                 Icon(Icons.add)
