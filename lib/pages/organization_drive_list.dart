@@ -16,27 +16,30 @@ class OrganizationDriveList extends StatefulWidget {
 }
 
 class _OrganizationDriveListState extends State<OrganizationDriveList> {
-  
   @override
   Widget build(BuildContext context) {
-    context.read<DonationDriveProvider>().fetchDonationDrives(context.watch<MyAuthProvider>().userID);
-    Stream<QuerySnapshot> donationDrives = context.watch<DonationDriveProvider>().donationDrives;
+    context
+        .read<DonationDriveProvider>()
+        .fetchDonationDrives(context.watch<MyAuthProvider>().userID);
+    Stream<QuerySnapshot> donationDrives =
+        context.watch<DonationDriveProvider>().donationDrives;
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CreateDonationDrivePage()),
-          );
-        },
-        child: Icon(Icons.add),
-      ),
-      appBar: AppBar(
-        title: Text('Donation Drives'),
-      ),
-      body: StreamBuilder(
-          stream: donationDrives, 
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateDonationDrivePage()),
+            );
+          },
+          child: Icon(Icons.add),
+        ),
+        appBar: AppBar(
+          title: Text('Donation Drives'),
+        ),
+        body: StreamBuilder(
+          stream: donationDrives,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(
@@ -55,14 +58,14 @@ class _OrganizationDriveListState extends State<OrganizationDriveList> {
             return ListView.builder(
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (context, index) {
-                DonationDrive donationDrive = DonationDrive.fromJson(
-                  snapshot.data?.docs[index].data() as Map<String, dynamic>
-                );
+                Map<String, dynamic> docMap =
+                    snapshot.data?.docs[index].data() as Map<String, dynamic>;
+                docMap["id"] = snapshot.data?.docs[index].id;
+                DonationDrive donationDrive = DonationDrive.fromJson(docMap);
                 return DonationDriveCard(donationDrive: donationDrive);
               },
             );
           },
-        )
-    );
+        ));
   }
 }
