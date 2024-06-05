@@ -28,7 +28,7 @@ class _DonorMainPageState extends State<DonorMainPage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.volunteer_activism),
-            label: 'Donations',
+            label: 'Organizations',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

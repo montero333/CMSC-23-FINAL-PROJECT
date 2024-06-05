@@ -39,7 +39,8 @@ class _ApprovalPageState extends State<ApprovalPage> {
               itemCount: organizations.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(organizations[index]), // Display organization name
+                  title:
+                      Text(organizations[index]), // Display organization name
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

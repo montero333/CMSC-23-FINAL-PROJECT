@@ -1,37 +1,36 @@
-import 'dart:convert';
-import 'dart:io';
 
 class Organization {
-  String id;
+  String? id;
+  String userId;
   String name;
-  String description;
-  List<String>? donations;
+  String? description;
+  // List<String>? donations;
   bool status;
 
   Organization({
-    required this.id,
+    this.id,
+    required this.userId,
     required this.name,
-    required this.description,
-    required this.donations,
+    this.description,
+    // required this.donations,
     required this.status,
   });
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(Organization organization) {
     return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'donations': donations,
-      'status': status,
+      'userId': organization.userId,
+      'name': organization.name,
+      'description': organization.description,
+      'status': organization.status,
     };
   }
 
   static Organization fromJson(Map<String, dynamic> json) {
     return Organization(
       id: json['id'],
+      userId: json['userId'],
       name: json['name'],
       description: json['description'],
-      donations: json['donations'] != null ? List<String>.from(json['donations']) : null,
       status: json['status'],
     );
   }

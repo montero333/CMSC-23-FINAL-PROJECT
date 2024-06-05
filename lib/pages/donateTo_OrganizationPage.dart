@@ -8,16 +8,17 @@ import '../providers/donation_provider.dart';
 import 'package:provider/provider.dart';
 import '../models/donation_drive_model.dart';
 import 'package:intl/intl.dart'; // Import the intl package
-import '../models/donation_model.dart'; 
-
+import '../models/donation_model.dart';
 
 class DonateToOrganizationDrive extends StatefulWidget {
   final DonationDrive donationDrive;
   final String? userID;
-  DonateToOrganizationDrive({super.key, this.userID, required this.donationDrive});
+  DonateToOrganizationDrive(
+      {super.key, this.userID, required this.donationDrive});
 
   @override
-  State<DonateToOrganizationDrive> createState() => _DonateToOrganizationDriveState();
+  State<DonateToOrganizationDrive> createState() =>
+      _DonateToOrganizationDriveState();
 }
 
 class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
@@ -76,10 +77,17 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
     bool isWeightValid = donationFormInput["weight"] > 0;
     bool isAddressEntered = donationFormInput["addresses"].isNotEmpty;
 
-    if ( donationFormInput["deliveryMethod"] != "dropOff" ) {
-      return isCheckboxChecked && isDateSelected && isTimeSelected && isWeightValid && isAddressEntered;
+    if (donationFormInput["deliveryMethod"] != "dropOff") {
+      return isCheckboxChecked &&
+          isDateSelected &&
+          isTimeSelected &&
+          isWeightValid &&
+          isAddressEntered;
     } else {
-      return isCheckboxChecked && isDateSelected && isTimeSelected && isWeightValid;
+      return isCheckboxChecked &&
+          isDateSelected &&
+          isTimeSelected &&
+          isWeightValid;
     }
   }
 
@@ -89,56 +97,56 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
         donationFormInput["addresses"] = []; //reset address
       }
       showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Confirm Donation"),
-          content: Text("Are you sure you want to donate?"),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("No"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Close the dialog after submitting the form
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Successful donation!'), // Display a success message
-                  ),
-                );
-                Donation donation = Donation(
-                  orgID: widget.donationDrive.id, 
-                  userID: widget.userID,
-                  food: donationFormInput["food"],
-                  clothes: donationFormInput["clothes"],
-                  cash: donationFormInput["cash"],
-                  necessities: donationFormInput["necessities"],
-                  others: donationFormInput["others"],
-                  deliveryMethod: donationFormInput["deliveryMethod"],
-                  weight: donationFormInput["weight"],
-                  addresses: donationFormInput["addresses"],
-                  date: DateFormat('yyyy-MM-dd').format(donationFormInput["date"]),
-                  time: donationFormInput["time"]?.format(context) ?? "",
-                  image: ImageConstants().convertToBase64(image)
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Confirm Donation"),
+            content: Text("Are you sure you want to donate?"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("No"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context)
+                      .pop(); // Close the dialog after submitting the form
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          'Successful donation!'), // Display a success message
+                    ),
                   );
-                print(donationFormInput);
-                donation.printDetails();
-                context.read<DonationProvider>().addDonation(donation);
-                
-                
-              },
-              child: Text("Yes"),
-            ),
-          ],
-        );
-      },
-    );
-      
-      
+                  Donation donation = Donation(
+                      orgID: widget.donationDrive.orgID,
+                      driveID: widget.donationDrive.id,
+                      userID: widget.userID,
+                      food: donationFormInput["food"],
+                      clothes: donationFormInput["clothes"],
+                      cash: donationFormInput["cash"],
+                      necessities: donationFormInput["necessities"],
+                      others: donationFormInput["others"],
+                      deliveryMethod: donationFormInput["deliveryMethod"],
+                      weight: donationFormInput["weight"],
+                      addresses: donationFormInput["addresses"],
+                      date: DateFormat('yyyy-MM-dd')
+                          .format(donationFormInput["date"]),
+                      time: donationFormInput["time"]?.format(context) ?? "",
+                      image: ImageConstants().convertToBase64(image));
+                  print(donationFormInput);
+                  donation.printDetails();
+                  context.read<DonationProvider>().addDonation(donation);
+                },
+                child: Text("Yes"),
+              ),
+            ],
+          );
+        },
+      );
+
       // Perform form submission logic here
     } else {
       showDialog(
@@ -146,7 +154,8 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Invalid Input"),
-            content: Text("Please ensure all required fields are filled out correctly."),
+            content: Text(
+                "Please ensure all required fields are filled out correctly."),
             actions: <Widget>[
               TextButton(
                 child: Text("OK"),
@@ -197,13 +206,12 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Text("Donation Type", 
-              style: TextStyle(
+            Text("Donation Type",
+                style: TextStyle(
                   color: Colors.black, // Set text color
                   fontSize: 16, // Set font size
                   fontWeight: FontWeight.bold, // Set font weight
-                )
-              ),
+                )),
             CheckboxListTile(
               title: const Text('Food'),
               value: donationFormInput["food"],
@@ -273,7 +281,8 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                 });
               },
               activeColor: Colors.green, // Set the color when selected
-              selectedTileColor: Colors.grey[200], // Set the color of the selected tile
+              selectedTileColor:
+                  Colors.grey[200], // Set the color of the selected tile
             ),
             RadioListTile<String>(
               title: const Text('Drop Off'),
@@ -285,7 +294,8 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                 });
               },
               activeColor: Colors.green, // Set the color when selected
-              selectedTileColor: Colors.grey[200], // Set the color of the selected tile
+              selectedTileColor:
+                  Colors.grey[200], // Set the color of the selected tile
             ),
             Text(
               "Weight of items to donate",
@@ -295,7 +305,6 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                 fontWeight: FontWeight.bold, // Set font weight
               ),
             ),
-
             TextField(
               controller: weightController,
               decoration: InputDecoration(
@@ -303,13 +312,19 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                 labelStyle: TextStyle(
                   color: Colors.black, // Change the color of the label text
                 ),
-                border: OutlineInputBorder( // Set border style
-                  borderSide: BorderSide(color: Colors.grey), // Set the border color
-                  borderRadius: BorderRadius.circular(10.0), // Set border radius
+                border: OutlineInputBorder(
+                  // Set border style
+                  borderSide:
+                      BorderSide(color: Colors.grey), // Set the border color
+                  borderRadius:
+                      BorderRadius.circular(10.0), // Set border radius
                 ),
-                focusedBorder: OutlineInputBorder( // Set focused border style
-                  borderSide: BorderSide(color: Colors.blue), // Set the focused border color
-                  borderRadius: BorderRadius.circular(10.0), // Set focused border radius
+                focusedBorder: OutlineInputBorder(
+                  // Set focused border style
+                  borderSide: BorderSide(
+                      color: Colors.blue), // Set the focused border color
+                  borderRadius:
+                      BorderRadius.circular(10.0), // Set focused border radius
                 ),
               ),
               keyboardType: TextInputType.number,
@@ -318,7 +333,6 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                 color: Colors.black, // Change the color of the input text
               ),
             ),
-
             Visibility(
               visible: donationFormInput["deliveryMethod"] != "dropOff",
               child: Column(
@@ -336,17 +350,24 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                     decoration: InputDecoration(
                       labelText: "Enter address",
                       labelStyle: TextStyle(
-                          color: Colors.black, // Change the color of the label text
-                        ),
-                        border: OutlineInputBorder( // Set border style
-                          borderSide: BorderSide(color: Colors.grey), // Set the border color
-                          borderRadius: BorderRadius.circular(10.0), // Set border radius
-                        ),
-                        focusedBorder: OutlineInputBorder( // Set focused border style
-                          borderSide: BorderSide(color: Colors.blue), // Set the focused border color
-                          borderRadius: BorderRadius.circular(10.0), // Set focused border radius
-                        ),
+                        color:
+                            Colors.black, // Change the color of the label text
                       ),
+                      border: OutlineInputBorder(
+                        // Set border style
+                        borderSide: BorderSide(
+                            color: Colors.grey), // Set the border color
+                        borderRadius:
+                            BorderRadius.circular(10.0), // Set border radius
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        // Set focused border style
+                        borderSide: BorderSide(
+                            color: Colors.blue), // Set the focused border color
+                        borderRadius: BorderRadius.circular(
+                            10.0), // Set focused border radius
+                      ),
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: addAddress,
@@ -368,92 +389,101 @@ class _DonateToOrganizationDriveState extends State<DonateToOrganizationDrive> {
                 ],
               ),
             ),
-
             DatePicker(onDateSelected: updateDate),
             TimePicker(onTimeSelected: updateTime),
-            Text(
-              "Photo of items (optional)",
-              style: TextStyle(
-                      color: Colors.black, // Set text color
-                      fontSize: 16, // Set font size
-                      fontWeight: FontWeight.bold, // Set font weight
-                    )
-                ),
+            Text("Photo of items (optional)",
+                style: TextStyle(
+                  color: Colors.black, // Set text color
+                  fontSize: 16, // Set font size
+                  fontWeight: FontWeight.bold, // Set font weight
+                )),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              ElevatedButton.icon(
-                icon: Icon(Icons.photo_library),
-                onPressed: () => {
-                  pickImage(ImageSource.gallery)
-                },
-                label: Text("Pick from Gallery"),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, 
-                  backgroundColor: Colors.blue, // Set the text color for the button
-                  textStyle: TextStyle(fontSize: 16.0), // Adjust the text size
-                  shape: RoundedRectangleBorder( // Create rounded corners
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-              ),
-              ElevatedButton.icon(
-                icon: Icon(Icons.camera_alt),
-                onPressed: () => {
-                  pickImage(ImageSource.camera)
-                },
-                label: Text("Pick from Camera"), // Change label text for clarity
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, 
-                  backgroundColor: Colors.deepOrange, // Maintain white text color
-                  textStyle: TextStyle(fontSize: 16.0), // Consistent text size
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0), // Maintain rounded corners
-                  ),
-                ),
-              ),
-              ],
-            ),
-            if (image != null) 
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Image you picked:"),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: Image.file(image!, width: 200, height: 200,),
-                    ),
-                  ],
-                ),
-                ElevatedButton(onPressed: () => {
-                  setState(() {
-                    image = null;
-                  })
-                }, 
-                child: Text("Remove Image"),
-                style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, 
-                    backgroundColor: Colors.red, // Text color
-                    textStyle: TextStyle(fontSize: 16), // Text style
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Button padding
-                    shape: RoundedRectangleBorder( // Button border shape
-                      borderRadius: BorderRadius.circular(8),
+                ElevatedButton.icon(
+                  icon: Icon(Icons.photo_library),
+                  onPressed: () => {pickImage(ImageSource.gallery)},
+                  label: Text("Pick from Gallery"),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor:
+                        Colors.blue, // Set the text color for the button
+                    textStyle:
+                        TextStyle(fontSize: 16.0), // Adjust the text size
+                    shape: RoundedRectangleBorder(
+                      // Create rounded corners
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                )
+                ),
+                ElevatedButton.icon(
+                  icon: Icon(Icons.camera_alt),
+                  onPressed: () => {pickImage(ImageSource.camera)},
+                  label:
+                      Text("Pick from Camera"), // Change label text for clarity
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor:
+                        Colors.deepOrange, // Maintain white text color
+                    textStyle:
+                        TextStyle(fontSize: 16.0), // Consistent text size
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          10.0), // Maintain rounded corners
+                    ),
+                  ),
+                ),
               ],
             ),
+            if (image != null)
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Image you picked:"),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        child: Image.file(
+                          image!,
+                          width: 200,
+                          height: 200,
+                        ),
+                      ),
+                    ],
+                  ),
+                  ElevatedButton(
+                    onPressed: () => {
+                      setState(() {
+                        image = null;
+                      })
+                    },
+                    child: Text("Remove Image"),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red, // Text color
+                      textStyle: TextStyle(fontSize: 16), // Text style
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10), // Button padding
+                      shape: RoundedRectangleBorder(
+                        // Button border shape
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ElevatedButton(
               onPressed: submitForm,
               child: Text("Done"),
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, 
+                foregroundColor: Colors.white,
                 backgroundColor: Colors.green, // Text color
                 textStyle: TextStyle(fontSize: 16), // Text style
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Button padding
-                shape: RoundedRectangleBorder( // Button border shape
+                padding: EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 10), // Button padding
+                shape: RoundedRectangleBorder(
+                  // Button border shape
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -481,7 +511,7 @@ class _DatePickerState extends State<DatePicker> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2015, 8),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
     if (picked != null && picked != selectedDate) {
@@ -558,4 +588,3 @@ class _TimePickerState extends State<TimePicker> {
     );
   }
 }
-

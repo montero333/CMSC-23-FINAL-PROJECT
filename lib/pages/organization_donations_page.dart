@@ -3,78 +3,73 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/donation_model.dart';
+import '../providers/auth_provider.dart';
+import '../providers/credential_provider.dart';
 import '../providers/donation_provider.dart';
 
 class DonationListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
-      return Scaffold(
-        body: Center(
-          child: Text('User not logged in'),
-        ),
-      );
-    }
+    context
+        .watch<DonationProvider>()
+        .fetchDonationsByOrgID(context.watch<MyAuthProvider>().userID);
+    Stream<QuerySnapshot> donations =
+        context.watch<DonationProvider>().donationStream;
+    
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Donation List"),
+        title: Text("List of Donations"),
       ),
-      body: DonationList(userID: currentUser.uid),
+      body: StreamBuilder(
+        stream: donations,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("Error encountered! ${snapshot.error}"),
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text("No Donations Found"),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: snapshot.data?.docs.length,
+            itemBuilder: (context, index) {
+              Map<String, dynamic> docMap =
+                  snapshot.data?.docs[index].data() as Map<String, dynamic>;
+              docMap["id"] = snapshot.data?.docs[index].id;
+              Donation donation = Donation.fromJson(docMap);
+              return GestureDetector(
+                  onTap: () => {
+                        print(donation.id)
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => DonateToOrganizationDrive(donationDrive: donationDrive, userID: context.watch<MyAuthProvider>().userID),))
+                      },
+                  child: OrganizationDonationCard(donation: donation));
+            },
+          );
+        },
+      ),
     );
   }
 }
 
-class DonationList extends StatelessWidget {
-  final String userID;
-
-  DonationList({required this.userID});
-
-  @override
-  Widget build(BuildContext context) {
-    final donationProvider = Provider.of<DonationProvider>(context);
-    donationProvider.fetchDonationsByUserID(userID);
-
-    return StreamBuilder<QuerySnapshot>(
-      stream: donationProvider.donationStream,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Center(child: Text('No donations found.'));
-        }
-
-        var donations = snapshot.data!.docs.map((doc) {
-          var data = doc.data() as Map<String, dynamic>;
-          data['id'] = doc.id;
-          return Donation.fromJson(data);
-        }).toList();
-
-        return ListView.builder(
-          itemCount: donations.length,
-          itemBuilder: (context, index) {
-            return DonationCard(donation: donations[index]);
-          },
-        );
-      },
-    );
-  }
-}
-class DonationCard extends StatefulWidget {
+class OrganizationDonationCard extends StatefulWidget {
   final Donation donation;
 
-  DonationCard({required this.donation});
+  OrganizationDonationCard({required this.donation});
 
   @override
-  _DonationCardState createState() => _DonationCardState();
+  _OrganizationDonationCardState createState() =>
+      _OrganizationDonationCardState();
 }
 
-class _DonationCardState extends State<DonationCard> {
+class _OrganizationDonationCardState extends State<OrganizationDonationCard> {
   String _selectedStatus = '';
 
   @override
@@ -93,13 +88,29 @@ class _DonationCardState extends State<DonationCard> {
 
   @override
   Widget build(BuildContext context) {
+    
+
     return Card(
       margin: EdgeInsets.all(10),
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: [FutureBuilder<Map<String, dynamic>?>(
+                  future: context.read<CredProvider>().getUserByID(widget.donation.userID),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else if (!snapshot.hasData || snapshot.data == null) {
+                      return Text("User not found");
+                    } else {
+                      Map<String, dynamic>? userData = snapshot.data;
+                      return Text("${userData!['firstName']} ${userData['lastName']}");
+                    }
+                  },
+                ),
             Text('Types: ${widget.donation.getDonationTypes(widget.donation)}'),
             Text('Delivery Method: ${widget.donation.deliveryMethod}'),
             Text('Weight: ${widget.donation.weight} kg'),

@@ -47,6 +47,10 @@ class FirebaseDonationsAPI {
   Stream<QuerySnapshot> getAllDonationsByDriveID(String? driveID) {
     return db.collection("donations").where("driveID", isEqualTo: driveID).snapshots();
   }
+  
+  Stream<QuerySnapshot> getAllDonationsByOrgID(String? orgID) {
+    return db.collection("donations").where("orgID", isEqualTo: orgID).snapshots();
+  }
 
 
 

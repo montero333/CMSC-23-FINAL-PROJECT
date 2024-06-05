@@ -1,107 +1,89 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../models/donation_drive_model.dart';
 import '../providers/donation_drive_provider.dart';
-import 'drive_form.dart';
-import 'edit_donation_drive.dart';
+import '../pages/donateTo_OrganizationPage.dart';
+import 'package:provider/provider.dart';
+import '../models/donation_drive_model.dart';
+import '../models/organization_model.dart';
+import '../providers/auth_provider.dart';
+import '../providers/organizations_provider.dart';
+import 'OrganizationInfoPage.dart';
+import 'donation_drive_card.dart';
 
-class DonationDrivesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
-      // Handle case where user is not logged in
-      return Scaffold(
-        body: Center(
-          child: Text('User not logged in'),
-        ),
-      );
-    }
+class DonationDriveList extends StatefulWidget {
+  // final List<DonationDrive> donationDrives;
+  final String? organizationUserID;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Donation Drives'),
-      ),
-      body: StreamBuilder<List<DonationDrive>>(
-        stream: Provider.of<DonationDriveProvider>(context).donationDriveStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Text('No donation drives found.'),
-            );
-          } else {
-            final donationDrives = snapshot.data!;
-            final currentUserOrgID = currentUser.uid;
+  const DonationDriveList({super.key, required this.organizationUserID});
 
-            final orgDonationDrives = donationDrives.where((drive) => drive.orgID == currentUserOrgID).toList();
-
-            return ListView.builder(
-              itemCount: orgDonationDrives.length,
-              itemBuilder: (context, index) {
-                DonationDrive donationDrive = orgDonationDrives[index];
-                return DonationDriveCard(
-                  donationDrive: donationDrive,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditDonationDriveForm(donationDrive: donationDrive),
-                      ),
-                    );
-                    print('Clicked on ${donationDrive.title}');
-                  },
-                );
-              },
-            );
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CreateDonationDriveForm()),
-          );
-        },
-        child: Icon(Icons.add),
-      ),
-    );
-  }
+  _DonationDriveListState createState() => _DonationDriveListState();
 }
 
-class DonationDriveCard extends StatelessWidget {
-  final DonationDrive donationDrive;
-  final VoidCallback onTap;
-
-  DonationDriveCard({required this.donationDrive, required this.onTap});
+class _DonationDriveListState extends State<DonationDriveList> {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   if (widget.organizationUserID != null) {
+  //     print(widget.organizationUserID);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        margin: EdgeInsets.all(10),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Title: ${donationDrive.title}', style: TextStyle(fontWeight: FontWeight.bold)),
-              Text('Description: ${donationDrive.description}'),
-              SizedBox(height: 10),
-            ],
-          ),
+    context
+        .read<DonationDriveProvider>()
+        .fetchDonationDrives(widget.organizationUserID);
+    Stream<QuerySnapshot> donationDrives =
+        context.watch<DonationDriveProvider>().donationDrives;
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("List of Donation Drives"),
+          backgroundColor: Colors.green,
         ),
-      ),
-    );
+        body: StreamBuilder(
+          stream: donationDrives,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text("Error encountered! ${snapshot.error}"),
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return const Center(
+                child: Text("No Donation Drives Found"),
+              );
+            }
+
+            return Expanded(
+              child: ListView.builder(
+                itemCount: snapshot.data?.docs.length,
+                itemBuilder: (context, index) {
+                  Map<String, dynamic> docMap =
+                      snapshot.data?.docs[index].data() as Map<String, dynamic>;
+                  docMap["id"] = snapshot.data?.docs[index].id;
+                  DonationDrive donationDrive = DonationDrive.fromJson(docMap);
+                  ;
+                  return GestureDetector(
+                      onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DonateToOrganizationDrive(
+                                          donationDrive: donationDrive,
+                                          userID: context
+                                              .watch<MyAuthProvider>()
+                                              .userID),
+                                ))
+                          },
+                      child: DonationDriveCard(donationDrive: donationDrive));
+                },
+              ),
+            );
+          },
+        ));
   }
 }
